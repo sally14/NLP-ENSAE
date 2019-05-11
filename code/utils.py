@@ -108,10 +108,27 @@ def extract_vocabulary(train):
     return vocab
 
 
-def create_lookups(train, dirname, google_dir):
+def create_vocab_txt(vocab_path):
+    """
+    Creates vocab.txt from metadata.txt
+    """
+    lines = []
+    with open(vocab_path, 'r', encoding='utf-8') as voc:
+        for line in voc:
+            lines.append(line.split('\t')[0])
+    # Dropping the "WORD/INDEX" header
+    lines = lines[1:]
+    new_path = os.path.join(os.path.dirname(vocab_path), 'vocab.txt')
+    with open(new_path, 'w', encoding='utf-8') as f:
+        for i in lines:
+            f.write(i+'\n')
+
+
+def create_lookups(train, dirname, google_dir='/biodata/bioNLP/Word2Vec/english/GoogleNews'):
     """
     Creates vocab, metadata
     """
     vocab = extract_vocabulary(train)
     create_google_embeddings(vocab, google_dir, dirname)
+    create_vocab_txt(os.path.join(dirname, 'metadata.tsv'))
 
