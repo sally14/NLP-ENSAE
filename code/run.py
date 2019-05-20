@@ -11,9 +11,8 @@ Usage:
   [--learning_rate=<lr>] [--batch_size=<bs>]
   [--n_epochs=<ne>] [--optimizer=<op>] [--checkpoints=<ckpt>]
   [--buffer_size=<bfs>]
-  
 
- 
+
 Options:
   -h --help
   --version
@@ -145,55 +144,87 @@ if __name__ == '__main__':
         buffer_size = params['buffer_size']
 
         # Get the files list:
-        sent_files = glob(os.path.join(params['filepath'], '*_train.sent'))
-        label_files = glob(os.path.join(params['filepath'], '*_train.labels'))
+        sent_files = glob(os.path.join(params['filepath'], '*.train.sent'))
+        label_files = glob(os.path.join(params['filepath'], '*.train.labels'))
 
         # Tensorflow TextLineDataset reads files, file per file, 
         # line per line, and outputs tensors containing the string
         # for each line.
-        sent_lines = tf.data.TextLineDataset(sent_files, buffer_size=params['buffer_size'])
-        label_lines = tf.data.TextLineDataset(label_files,  buffer_size=params['buffer_size'])
+        sent_lines = tf.data.TextLineDataset(
+                                sent_files,
+                                buffer_size=params['buffer_size'])
+        label_lines = tf.data.TextLineDataset(
+                                label_files,
+                                buffer_size=params['buffer_size'])
         nb_cores = tf.data.experimental.AUTOTUNE
-        # WARNING : custom decode_tensor & lower_tensor functions 
+        # WARNING : custom decode_tensor & lower_tensor functions
         # might have reproductibility issues using tf.save because of pyfunc
         # Encoding forcing through unidecode
-        decoded_tokens = sent_lines.map(lambda token: decode_tensor([token]), num_parallel_calls=nb_cores)
-        # Lower words before indexing for tokens, for compatibility with word embeddings
-        lowered_tokens = decoded_tokens.map(lambda token : lower_tensor([token]))
+        decoded_tokens = sent_lines.map(lambda token: decode_tensor([token]),
+                                        num_parallel_calls=nb_cores)
+        # Lower words before indexing for tokens, 
+        # for compatibility with word embeddings
+        lowered_tokens =\
+            decoded_tokens.map(lambda token: lower_tensor([token]))
         # Split tokens along whitespace
-        dataset_tokens = lowered_tokens.map(lambda string: tf.string_split([string], delimiter=' ').values, num_parallel_calls=nb_cores)
-        # No lowering for characters to keep maximum information, split a first time alogn whitespaces
-        decoded_chars = decoded_tokens.map(lambda string: tf.string_split([string], delimiter=' ').values, num_parallel_calls=nb_cores)
+        dataset_tokens =\
+            lowered_tokens.map(
+                lambda string: tf.string_split([string], delimiter=' ').values,
+                num_parallel_calls=nb_cores)
+        # No lowering for characters to keep maximum information,
+        # split a first time along whitespaces
+        decoded_chars =\
+            decoded_tokens.map(
+                lambda string: tf.string_split([string], delimiter=' ').values,
+                num_parallel_calls=nb_cores)
 
-        dataset_labels = label_lines.map(lambda string: tf.string_split([string], delimiter=' ').values, num_parallel_calls=nb_cores)
+        dataset_labels =\
+            label_lines.map(
+                lambda string: tf.string_split([string], delimiter=' ').values,
+                num_parallel_calls=nb_cores)
         dataset_chars = decoded_chars.apply(extract_char_V2)
 
         # Vocabulary, label vocab, char vocab
-        words = tf.contrib.lookup.index_table_from_file(params['word_emb_vocab'], num_oov_buckets=1)
-        # tags = tf.contrib.lookup.index_table_from_file(params['label_vocab'], num_oov_buckets=1)
-        chars = tf.contrib.lookup.index_table_from_file(params['char_vocab'], num_oov_buckets=1)
+        words =\
+            tf.contrib.lookup.index_table_from_file(params['word_emb_vocab'],
+                                                    num_oov_buckets=1)
+        chars =\
+            tf.contrib.lookup.index_table_from_file(params['char_vocab'],
+                                                    num_oov_buckets=1)
 
         # Embed words, labels, chars with their indexes in vocabularies.
-        dataset_tokens = dataset_tokens.map(lambda tokens: words.lookup(tokens), num_parallel_calls=cores)
-        dataset_seq_length = dataset_tokens.map(lambda tokens: tf.size(tokens), num_parallel_calls=cores)
-        dataset_labels = dataset_labels.map(lambda tokens: words.lookup(tokens), num_parallel_calls=cores)
-        dataset_chars = dataset_chars.map(lambda tokens: chars.lookup(tokens), num_parallel_calls=cores)
+        dataset_tokens = dataset_tokens.map(
+                            lambda tokens: words.lookup(tokens),
+                            num_parallel_calls=cores)
+        dataset_seq_length = dataset_tokens.map(
+                            lambda tokens: tf.size(tokens),
+                            num_parallel_calls=cores)
+        dataset_labels = dataset_labels.map(
+                            lambda tokens: words.lookup(tokens),
+                            num_parallel_calls=cores)
+        dataset_chars = dataset_chars.map(
+                            lambda tokens: chars.lookup(tokens),
+                            num_parallel_calls=cores)
 
         # Now needs zipping, padding, batching, shuffling
         dataset_input = tf.data.Dataset.zip((dataset_tokens, dataset_chars))
         padded_shapes = (tf.TensorShape([None]),       # padding the words
-                        tf.TensorShape([None, None]))
-        padding_values = (words.lookup(tf.constant(['<pad_word>']))[0],  # sentences padded on the right with <pad>
-                        chars.lookup(tf.constant(['<pad_char>']))[0]) 
-        dataset_input = dataset_input.padded_batch(batch_size, padded_shapes=padded_shapes, padding_values=padding_values)
+                         tf.TensorShape([None, None]))
+        padding_values = (words.lookup(tf.constant(['<pad_word>']))[0],
+                          chars.lookup(tf.constant(['<pad_char>']))[0])
+        dataset_input = dataset_input.padded_batch(
+                                batch_size,
+                                padded_shapes=padded_shapes,
+                                padding_values=padding_values)
 
-        padded_shapes = (tf.TensorShape([None])) # padding the characters for each word
-        padding_values = (tags.lookup(tf.constant(['<pad_label>']))[0])  # arrays of labels padded on the right with <pad>
-        # dataset_labels = dataset_labels.padded_batch(batch_size, padded_shapes=padded_shapes, padding_values=padding_values)
+        # padding the characters for each word
+        padded_shapes = (tf.TensorShape([None]))
+        # arrays of labels padded on the right with <pad>
 
         dataset_seq_length = dataset_seq_length.batch(batch_size)
 
-        dataset = tf.data.Dataset.zip(((dataset_input, dataset_seq_length), dataset_labels))
+        dataset = tf.data.Dataset.zip(((dataset_input, dataset_seq_length),
+                                      dataset_labels))
 
         # Shuffle the dataset and repeat:
         dataset = dataset.shuffle(buffer_size).repeat(repeat_)
@@ -201,7 +232,7 @@ if __name__ == '__main__':
         return dataset
 
     # Create configs
-    #sess_config = tf.ConfigProto(device_count = {'GPU': 0})
+    # sess_config = tf.ConfigProto(device_count = {'GPU': 0})
     config = tf.ConfigProto(allow_soft_placement=True,
                             log_device_placement=True) 
     # config.intra_op_parallelism_threads = 16

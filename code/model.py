@@ -22,7 +22,6 @@ import tensorflow as tf
 def model_fn(features, labels, mode, params):
     # Get the params
     batch_size = params['batch_size']
-    n_labels = params['n_labels']
     char_emb_size = params['char_emb_size']
     nb_chars = params['nb_chars']
     hidden_size_char = params['hidden_size_char']
@@ -32,8 +31,7 @@ def model_fn(features, labels, mode, params):
     nb_tags = params['nb_tags']
     lr = params['learning_rate']
     optim = params['optimizer']
-    max_len_sent= params['max_len_sent']
-    pad = params['nb_words']
+    vocab_size = params['vocab_size']
 
     # Get the inputs
     # input_sentences, input_char, seq_length = features
@@ -73,7 +71,7 @@ def model_fn(features, labels, mode, params):
     LSTM =\
         tf.contrib.cudnn_rnn.CudnnLSTM(1,
                                        hidden_size_char,
-                                       direction = 'bidirectional')
+                                       direction='bidirectional')
     outputs, output_states = LSTM(tf.transpose(char_embedded, [1, 0, 2]))
     # tf.transpose = CudnnLSTM handles differently time axis
     output_fw = output_states[0][1]
@@ -95,95 +93,62 @@ def model_fn(features, labels, mode, params):
     LSTM =\
         tf.contrib.cudnn_rnn.CudnnLSTM(1,
                                        hidden_size_NER,
-                                       direction = 'bidirectional')
+                                       direction='bidirectional')
     outputs, output_states = LSTM(tf.transpose(word_embeddings, [1, 0, 2]))
     output = outputs
     output = tf.transpose(output, perm=[1, 0, 2])
     output = tf.layers.dropout(output, rate=dropout, training=training)
 
+    logits1 = tf.layers.dense(output, vocab_size)
+    logits2 = tf.layers.dense(output, vocab_size)
+    logits3 = tf.layers.dense(output, vocab_size)
 
-    logits = tf.layers.dense(output, nb_tags)
-    # m = tf.math.reduce_max(seq_length)
+    logits = tf.concat([logits1, logits2, logits3], axis=1)
 
-    crf_params = tf.get_variable("crf", [nb_tags, nb_tags], dtype=tf.float32)
-    labels_pred, _ = tf.contrib.crf.crf_decode(logits, crf_params, seq_length)
-    # s = labels_pred.shape.as_list()
-    # r = max_len_sent - s[1]
-    # l = batch_size
-    # # pad = int(vocab_dict['PAD'])
-    # shap= tf.TensorShape([l, r])
-    # c= tf.fill(shap, value=pad)
-
-    # labels_pred = tf.concat([labels_pred, c], axis=1)
-
-    
-
+    labels_one_hot = tf.reshape(tf.one_hot(labels, depth=vocab_size),
+                                [None, None])
+    loss = tf.losses.softmax_cross_entropy(labels_one_hot, logits)
 
     if mode == tf.estimator.ModeKeys.PREDICT:
         
-        predictions = {'label' : labels_pred,
-                       'logits' : logits}
+        predictions = {'label': labels_pred,
+                       'logits': logits}
         export_outputs = {
             'predictions': tf.estimator.export.PredictOutput(predictions)}
         return tf.estimator.EstimatorSpec(mode, predictions=predictions, 
                                           export_outputs=export_outputs)
     else:
-        # CRF
-        log_likelihood, _ = tf.contrib.crf.crf_log_likelihood(logits,
-                                                              labels,
-                                                              seq_length,
-                                                              crf_params)
-        loss = tf.reduce_mean(-log_likelihood)
-        # bs = tf.shape(labels, out_type=tf.int64)
-        # labels_flat = tf.reshape(labels, [bs[0]*m])
-        # labels_pred_flat = tf.reshape(labels_pred, [bs[0]*m])
-        
-        weights = tf.sequence_mask(seq_length)
-        # weights_flat = tf.reshape(labels, [bs[0]*m])
-        acc = tf.metrics.accuracy(labels=labels,
-                                  predictions=labels_pred,
-                                  weights=weights,
-                                  name='accuracy')
-        prec = tf.metrics.precision(labels=labels,
-                                    predictions=labels_pred,
-                                    weights=weights,
-                                    name='precision')
-        rec = tf.metrics.recall(labels=labels,
-                                predictions=labels_pred,
-                                weights=weights,
-                                name='recall')
-        # op = tf.div(2*tf.matmul(prec[1], rec[1]), tf.add(prec[1], rec[1]))
-        f1 = [0, 2*prec[0]*rec[0]/(prec[0]+rec[0])]
-        print(f1[0])
-        metrics = {'accuracy': acc,
-                   'precision' : prec,
-                   'recall' : rec,
-                   'f1' : f1}
+        loss = tf.reduce_mean(loss)
+
+        # weights = tf.sequence_mask(seq_length)
+        # # weights_flat = tf.reshape(labels, [bs[0]*m])
+        # acc = tf.metrics.accuracy(labels=labels,
+        #                           predictions=labels_pred,
+        #                           weights=weights,
+        #                           name='accuracy')
+        # prec = tf.metrics.precision(labels=labels,
+        #                             predictions=labels_pred,
+        #                             weights=weights,
+        #                             name='precision')
+        # rec = tf.metrics.recall(labels=labels,
+        #                         predictions=labels_pred,
+        #                         weights=weights,
+        #                         name='recall')
+        # # op = tf.div(2*tf.matmul(prec[1], rec[1]), tf.add(prec[1], rec[1]))
+        # f1 = [0, 2*prec[0]*rec[0]/(prec[0]+rec[0])]
+        # print(f1[0])
+        # metrics = {'accuracy': acc,
+        #            'precision' : prec,
+        #            'recall' : rec,
+        #            'f1' : f1}
         # For Tensorboard
-        for k, v in metrics.items():
-            # v[1] is the update op of the metrics object
-            tf.summary.scalar(k, v[1])
-
-        # # Log confusion matrix with tf.summary/image api.
-        # cm =  tf.confusion_matrix(labels=labels_flat, predictions=labels_pred_flat, num_classes=nb_tags, weights=weights_flat)
-        # cmshape = tf.shape(cm)
-        # cm = tf.cast(tf.reshape(cm, [1, cmshape[0], cmshape[1], 1]),
-        #              tf.float32)
-        # cm = 255*tf.div(cm, tf.norm(cm))
-        # tf.summary.image(name='confusion_matrix',
-        #                  tensor=cm)
-        # tf.summary.histogram(values=labels, name='labels')
-        # tf.summary.histogram(values=labels_pred, name='predictions')
-
-
-        
-        # 4. Define EstimatorSpecs for EVAL
-        # Having an eval mode and metrics in Tensorflow allows you to use
-        # built-in early stopping (see later)
+        # for k, v in metrics.items():
+        #     # v[1] is the update op of the metrics object
+        #     tf.summary.scalar(k, v[1])
         if mode == tf.estimator.ModeKeys.EVAL:
-            metrics = {'accuracy': acc,
-                        'precision' : prec,
-                        'recall' : rec}
+            # metrics = {'accuracy': acc,
+            #             'precision' : prec,
+            #             'recall' : rec}
             return tf.estimator.EstimatorSpec(mode, loss=loss, 
                                               eval_metric_ops=metrics)
             
