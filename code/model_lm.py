@@ -119,20 +119,22 @@ def model_fn(features, labels, mode, params):
                                   predictions=labels_pred,
                                   weights=weights,
                                   name='accuracy')
-        prec = tf.metrics.precision(labels=labels,
-                                    predictions=labels_pred,
-                                    weights=weights,
-                                    name='precision')
-        rec = tf.metrics.recall(labels=labels,
-                                predictions=labels_pred,
-                                weights=weights,
-                                name='recall')
+        # prec = tf.metrics.precision(labels=labels,
+        #                             predictions=labels_pred,
+        #                             weights=weights,
+        #                             name='precision')
+        # rec = tf.metrics.recall(labels=labels,
+        #                         predictions=labels_pred,
+        #                         weights=weights,
+        #                         name='recall')
         # # op = tf.div(2*tf.matmul(prec[1], rec[1]), tf.add(prec[1], rec[1]))
         # f1 = [0, 2*prec[0]*rec[0]/(prec[0]+rec[0])]
         # print(f1[0])
-        metrics = {'accuracy': acc,
-                   'precision': prec,
-                   'recall': rec}
+        metrics = {
+                   'accuracy': acc,
+                #    'precision': prec,
+                #    'recall': rec
+                   }
                    # 'f1' : f1}
         # For Tensorboard
         for k, v in metrics.items():
