@@ -29,7 +29,7 @@ Options:
   --n_epochs=<ne>           Number of epochs to train the network on [default: 100]
   --optimizer=<op>          The chosen tf optimizer, in ['sgd', 'adam', 'adagrad', 'rmsprop'] [default: sgd]
   --checkpoints=<ckpt>      Save checkpoints every ckpt steps [default:5000]
-  --buffer_size=<bfs>       Buffer size for suffling 
+  --buffer_size=<bfs>       Buffer size for shuffling 
 """
 
 import os
