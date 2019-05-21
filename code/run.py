@@ -88,7 +88,7 @@ if __name__ == "__main__":
     # Get nb_chars, nb_labels, & nb_words for params (used in model):
     with open(params["word_emb_vocab"], "r", encoding="utf-8") as f:
         lines = f.readlines()
-        params["nb_words"] = len(lines)
+        params["vocab_size"] = len(lines)
         params["max_len_sent"] = max(map(len, lines))
     with open(params["label_vocab"], "r", encoding="utf-8") as f:
         params["nb_tags"] = len(f.readlines())
