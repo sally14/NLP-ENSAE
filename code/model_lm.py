@@ -89,10 +89,10 @@ def model_fn(features, labels, mode, params):
     # output = tf.layers.dropout(output, rate=dropout, training=training)
 
     output_fw = output_states[0][1]
-    # output_bw = output_states[1][1]
-    # output = tf.concat([output_fw, output_bw], axis=-1)
-
-    output = tf.layers.dense(output_fw, vocab_size, activation=tf.nn.leaky_relu)
+    output_bw = output_states[1][1]
+    output = tf.concat([output_fw, output_bw], axis=-1)
+    output = tf.clip_by_norm(output, 1.5)
+    output = tf.layers.dense(output, vocab_size, activation=tf.nn.leaky_relu)
 
     output = tf.layers.dense(output, vocab_size, activation=tf.nn.leaky_relu)
 
