@@ -80,14 +80,8 @@ def model_fn(features, labels, mode, params):
     # NER
     # Bi-LSTM
 
-    # Put time dimension on axis=1
-    s = tf.shape(word_embeddings)
-    word_embeddings = tf.reshape(
-        word_embeddings, shape=[s[0] * s[1], s[-2], char_emb_size]
-    )
     LSTM = tf.contrib.cudnn_rnn.CudnnLSTM(
-        2
-        , hidden_size_NER, direction="bidirectional"
+        2, hidden_size_NER, direction="bidirectional"
     )
     outputs, output_states = LSTM(tf.transpose(word_embeddings, [1, 0, 2]))
     # output = outputs
@@ -98,9 +92,9 @@ def model_fn(features, labels, mode, params):
     output_bw = output_states[1][1]
     output = tf.concat([output_fw, output_bw], axis=-1)
 
-    output = tf.layers.dense(output, vocab_size)
+    # output = tf.layers.dense(output, vocab_size)
 
-    output = tf.layers.dense(output, vocab_size)
+    # output = tf.layers.dense(output, vocab_size)
 
     logits = tf.layers.dense(output, vocab_size)
 
