@@ -114,7 +114,6 @@ def model_fn(features, labels, mode, params):
     else:
         loss = tf.reduce_mean(loss)
         ppxl = tf.exp(loss)
-        tf.summary.scalar(ppxl)
         weights = tf.sequence_mask(seq_length)
         # weights_flat = tf.reshape(labels, [bs[0]*m])
         acc = tf.metrics.accuracy(labels=labels,
@@ -132,7 +131,8 @@ def model_fn(features, labels, mode, params):
         # # op = tf.div(2*tf.matmul(prec[1], rec[1]), tf.add(prec[1], rec[1]))
         # f1 = [0, 2*prec[0]*rec[0]/(prec[0]+rec[0])]
         # print(f1[0])
-        metrics = {'accuracy': acc,
+        metrics = {'ppxl': ppxl,
+                   'accuracy': acc,
                    'precision': prec,
                    'recall': rec}
                    # 'f1' : f1}
