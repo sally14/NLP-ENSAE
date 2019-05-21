@@ -41,7 +41,7 @@ def model_fn(features, labels, mode, params):
     # First embed words
 
     _W2V_embedding = tf.Variable(
-        W2Vembedding, dtype=tf.float32, trainable=False
+        W2Vembedding, dtype=tf.float32, trainable=True
     )
     W2V_embedded = tf.nn.embedding_lookup(
         _W2V_embedding, input_sentences, name="W2V_embedded"
@@ -81,7 +81,7 @@ def model_fn(features, labels, mode, params):
     # Bi-LSTM
 
     LSTM = tf.contrib.cudnn_rnn.CudnnLSTM(
-        2, hidden_size_NER, direction="bidirectional"
+        1, hidden_size_NER, direction="bidirectional"
     )
     outputs, output_states = LSTM(tf.transpose(word_embeddings, [1, 0, 2]))
     # output = outputs
@@ -92,9 +92,9 @@ def model_fn(features, labels, mode, params):
     output_bw = output_states[1][1]
     output = tf.concat([output_fw, output_bw], axis=-1)
 
-    output = tf.layers.dense(output, vocab_size, activation=tf.nn.leaky_relu)
+    # output = tf.layers.dense(output, vocab_size, activation=tf.nn.leaky_relu)
 
-    output = tf.layers.dense(output, vocab_size, activation=tf.nn.leaky_relu)
+    # output = tf.layers.dense(output, vocab_size, activation=tf.nn.leaky_relu)
 
     logits = tf.layers.dense(output, vocab_size)
 
