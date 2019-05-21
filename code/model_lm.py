@@ -94,12 +94,11 @@ def model_fn(features, labels, mode, params):
 
     logits = tf.layers.dense(output, vocab_size)
 
-    labels = tf.one_hot(labels, depth=vocab_size)
+    labels_one_hot = tf.one_hot(labels, depth=vocab_size)
 
-    loss = tf.losses.softmax_cross_entropy(labels, logits)
+    loss = tf.losses.softmax_cross_entropy(labels_one_hot, logits)
 
     labels_pred = tf.math.argmax(logits)
-    
 
     if mode == tf.estimator.ModeKeys.PREDICT:
 
