@@ -246,8 +246,7 @@ if __name__ == "__main__":
         )
 
         # Shuffle the dataset and repeat:
-        dataset = dataset.repeat(repeat_)
-
+        dataset = dataset.apply(tf.contrib.data.shuffle_and_repeat(params["buffer_size"], repeat_))
         return dataset
     
     # dataset = input_fn()
