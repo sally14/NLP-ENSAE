@@ -102,7 +102,7 @@ def model_fn(features, labels, mode, params):
 
     loss = tf.losses.softmax_cross_entropy(labels_one_hot, logits)
 
-    # labels_pred = tf.math.argmax(logits)
+    labels_pred = tf.math.argmax(logits)
 
     if mode == tf.estimator.ModeKeys.PREDICT:
 
@@ -118,12 +118,12 @@ def model_fn(features, labels, mode, params):
         loss_sum = tf.reduce_sum(loss)
         loss_mean = tf.reduce_mean(loss)
         ppxl = tf.exp(loss_mean)
-        weights = tf.sequence_mask(seq_length)
+        # weights = tf.sequence_mask(seq_length)
         # weights_flat = tf.reshape(labels, [bs[0]*m])
-        # acc = tf.metrics.accuracy(labels=labels,
-        #                           predictions=labels_pred,
-        #                           weights=weights,
-        #                           name='accuracy')
+        acc = tf.metrics.accuracy(labels=labels,
+                                  predictions=labels_pred,
+                                #   weights=weights,
+                                  name='accuracy')
         # prec = tf.metrics.precision(labels=labels,
         #                             predictions=labels_pred,
         #                             weights=weights,
@@ -136,7 +136,7 @@ def model_fn(features, labels, mode, params):
         # f1 = [0, 2*prec[0]*rec[0]/(prec[0]+rec[0])]
         # print(f1[0])
         metrics = {
-                #    'accuracy': acc,
+                   'accuracy': acc,
                 #    'precision': prec,
                 #    'recall': rec
                    }
