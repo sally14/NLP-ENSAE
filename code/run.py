@@ -46,7 +46,7 @@ import tensorflow as tf
 from docopt import docopt
 from unidecode import unidecode
 
-from model import model_fn
+from model_lm import model_fn
 
 logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"))
 
