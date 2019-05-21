@@ -41,7 +41,7 @@ def model_fn(features, labels, mode, params):
     # First embed words
 
     _W2V_embedding = tf.Variable(
-        W2Vembedding, dtype=tf.float32, trainable=True
+        W2Vembedding, dtype=tf.float32, trainable=False
     )
     W2V_embedded = tf.nn.embedding_lookup(
         _W2V_embedding, input_sentences, name="W2V_embedded"
@@ -168,7 +168,7 @@ def model_fn(features, labels, mode, params):
                 opt = tf.train.GradientDescentOptimizer(lr)
             elif optim == "rmsprop":
                 opt = tf.train.RMSPropOptimizer(lr)
-            train_op = opt.minimize(loss_sum, global_step=global_step)
+            train_op = opt.minimize(loss_mean, global_step=global_step)
             return tf.estimator.EstimatorSpec(
-                mode, loss=loss_sum, train_op=train_op
+                mode, loss=loss_mean, train_op=train_op
             )
