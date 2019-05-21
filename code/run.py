@@ -76,9 +76,7 @@ if __name__ == "__main__":
     params["word_emb_vocab"] = os.path.join(
         params["embedding_path"], "vocab.txt"
     )
-    params["label_vocab"] = os.path.join(
-        params["embedding_path"], "labels_vocab.txt"
-    )
+    params["label_vocab"] = params["word_emb_vocab"]
     params["char_vocab"] = os.path.join(
         params["embedding_path"], "chars_vocab.txt"
     )
