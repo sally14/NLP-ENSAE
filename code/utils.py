@@ -48,11 +48,12 @@ def generate_dataset(filedir, mode="mlm", **kwargs):
         basename = os.path.basename(file)
         with open(file, "r", encoding="utf-8") as f:
             sents = f.readlines()  # In f, there is 1 sent per line
-            if mode == 'mlm':
+            if mode == "mlm":
                 write_mlm(write_path, basename, sents, n)
             else:
                 write_lm(write_path, basename, sents)
     return None
+
 
 # generate_dataset('/Users/salome/Documents/ENSAE/S6/nlp/dataset', mode="mlm", n=3)
 
@@ -70,9 +71,7 @@ def write_mlm(write_path, basename, sents, n):
                     print("m<n, passing.")
                     pass
                 else:
-                    mask = np.random.choice(
-                        range(m), size=n, replace=False
-                    )
+                    mask = np.random.choice(range(m), size=n, replace=False)
                     for i in range(m):
                         if i in mask:
                             s_write.write("<MASK> ")
@@ -93,10 +92,10 @@ def write_lm(write_path, basename, sents):
             for s in sents:
                 tokens = s.rstrip("\n").split(" ")
                 # Start and stop chars
-                tokens = ['<s>'] + tokens + ['</s>']
+                tokens = ["<s>"] + tokens + ["</s>"]
                 m = len(tokens)
                 for i in range(1, m):
-                    s_write.write(' '.join(tokens[:i]))
+                    s_write.write(" ".join(tokens[:i]))
                     l_write.write(tokens[i])
                     s_write.write("\n")
                     l_write.write("\n")

@@ -38,7 +38,7 @@ import time
 import logging
 from multiprocessing import cpu_count
 
-sys.path.append(os.path.expanduser('./code'))
+sys.path.append(os.path.expanduser("./code"))
 
 import numpy as np
 from glob import glob
@@ -50,15 +50,15 @@ from model import model_fn
 
 logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"))
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # Get the arguments
-    args = docopt(__doc__, version='0.3')
+    args = docopt(__doc__, version="0.3")
     print(args)
     start = time.time()
     # Transform it into a params dic
     params = {}
     for k in args.keys():
-        k2 = k.replace('<', '').replace('>', '').replace('-', '')
+        k2 = k.replace("<", "").replace(">", "").replace("-", "")
         try:  # Convert strings to int or floats when required
             params[k2] = int(args[k])
         except:
@@ -69,39 +69,51 @@ if __name__ == '__main__':
 
     # Filling additional features in the parameters dict.
     # Path to the .tsv file containing the embeddings
-    params['emb_tsv'] = os.path.join(params['embedding_path'], 'embeddings.tsv')
+    params["emb_tsv"] = os.path.join(
+        params["embedding_path"], "embeddings.tsv"
+    )
     # Path to vocabs for indexing
-    params['word_emb_vocab'] = os.path.join(params['embedding_path'], 'vocab.txt')
-    params['label_vocab'] = os.path.join(params['embedding_path'], 'labels_vocab.txt')
-    params['char_vocab'] = os.path.join(params['embedding_path'], 'chars_vocab.txt')
+    params["word_emb_vocab"] = os.path.join(
+        params["embedding_path"], "vocab.txt"
+    )
+    params["label_vocab"] = os.path.join(
+        params["embedding_path"], "labels_vocab.txt"
+    )
+    params["char_vocab"] = os.path.join(
+        params["embedding_path"], "chars_vocab.txt"
+    )
 
     # Loading .tsv file containing the embeddings:
-    params['embedding'] = np.genfromtxt(params['emb_tsv'], delimiter='\t')
-    logging.info('Loaded embeddings')
+    params["embedding"] = np.genfromtxt(params["emb_tsv"], delimiter="\t")
+    logging.info("Loaded embeddings")
 
     # Get nb_chars, nb_labels, & nb_words for params (used in model):
-    with open(params['word_emb_vocab'], 'r', encoding='utf-8') as f:
+    with open(params["word_emb_vocab"], "r", encoding="utf-8") as f:
         lines = f.readlines()
-        params['nb_words'] = len(lines)
-        params['max_len_sent'] = max(map(len, lines))
-    with open(params['label_vocab'], 'r', encoding='utf-8') as f:
-        params['nb_tags'] = len(f.readlines())
-    with open(params['char_vocab'], 'r', encoding='utf-8') as f:
-        params['nb_chars'] = len(f.readlines())
+        params["nb_words"] = len(lines)
+        params["max_len_sent"] = max(map(len, lines))
+    with open(params["label_vocab"], "r", encoding="utf-8") as f:
+        params["nb_tags"] = len(f.readlines())
+    with open(params["char_vocab"], "r", encoding="utf-8") as f:
+        params["nb_chars"] = len(f.readlines())
 
     cores = cpu_count()
 
     def lower_tensor(tens):
-        lower = tf.py_func(lambda x: x.lower(), tens, tf.string, stateful=False)
+        lower = tf.py_func(
+            lambda x: x.lower(), tens, tf.string, stateful=False
+        )
         return lower
 
     def decode_tensor(tens):
-        lower = tf.py_func(lambda x: x.lower(), tens, tf.string, stateful=False)
+        lower = tf.py_func(
+            lambda x: x.lower(), tens, tf.string, stateful=False
+        )
         return lower
 
     def extract_char(token, default_value="<pad_char>"):
         # Split characters
-        out = tf.string_split(token, delimiter='')
+        out = tf.string_split(token, delimiter="")
         # Convert to Dense tensor, filling with default value
         out = tf.sparse_tensor_to_dense(out, default_value=default_value)
         return out
@@ -139,92 +151,100 @@ if __name__ == '__main__':
                 the labels ids for each words for each sentence in the batch.
         """
         # Get the important parameters to generate datasets
-        batch_size = params['batch_size']
-        repeat_ = params['n_epochs']
-        buffer_size = params['buffer_size']
+        batch_size = params["batch_size"]
+        repeat_ = params["n_epochs"]
+        buffer_size = params["buffer_size"]
 
         # Get the files list:
-        sent_files = glob(os.path.join(params['filepath'], '*.train.sent'))
-        label_files = glob(os.path.join(params['filepath'], '*.train.labels'))
+        sent_files = glob(os.path.join(params["filepath"], "*.train.sent"))
+        label_files = glob(os.path.join(params["filepath"], "*.train.labels"))
 
-        # Tensorflow TextLineDataset reads files, file per file, 
+        # Tensorflow TextLineDataset reads files, file per file,
         # line per line, and outputs tensors containing the string
         # for each line.
         sent_lines = tf.data.TextLineDataset(
-                                sent_files,
-                                buffer_size=params['buffer_size'])
+            sent_files, buffer_size=params["buffer_size"]
+        )
         label_lines = tf.data.TextLineDataset(
-                                label_files,
-                                buffer_size=params['buffer_size'])
+            label_files, buffer_size=params["buffer_size"]
+        )
         nb_cores = tf.data.experimental.AUTOTUNE
         # WARNING : custom decode_tensor & lower_tensor functions
         # might have reproductibility issues using tf.save because of pyfunc
         # Encoding forcing through unidecode
-        decoded_tokens = sent_lines.map(lambda token: decode_tensor([token]),
-                                        num_parallel_calls=nb_cores)
-        # Lower words before indexing for tokens, 
+        decoded_tokens = sent_lines.map(
+            lambda token: decode_tensor([token]), num_parallel_calls=nb_cores
+        )
+        # Lower words before indexing for tokens,
         # for compatibility with word embeddings
-        lowered_tokens =\
-            decoded_tokens.map(lambda token: lower_tensor([token]))
+        lowered_tokens = decoded_tokens.map(
+            lambda token: lower_tensor([token])
+        )
         # Split tokens along whitespace
-        dataset_tokens =\
-            lowered_tokens.map(
-                lambda string: tf.string_split([string], delimiter=' ').values,
-                num_parallel_calls=nb_cores)
+        dataset_tokens = lowered_tokens.map(
+            lambda string: tf.string_split([string], delimiter=" ").values,
+            num_parallel_calls=nb_cores,
+        )
         # No lowering for characters to keep maximum information,
         # split a first time along whitespaces
-        decoded_chars =\
-            decoded_tokens.map(
-                lambda string: tf.string_split([string], delimiter=' ').values,
-                num_parallel_calls=nb_cores)
+        decoded_chars = decoded_tokens.map(
+            lambda string: tf.string_split([string], delimiter=" ").values,
+            num_parallel_calls=nb_cores,
+        )
 
-        dataset_labels =\
-            label_lines.map(
-                lambda string: tf.string_split([string], delimiter=' ').values,
-                num_parallel_calls=nb_cores)
+        dataset_labels = label_lines.map(
+            lambda string: tf.string_split([string], delimiter=" ").values,
+            num_parallel_calls=nb_cores,
+        )
         dataset_chars = decoded_chars.apply(extract_char_V2)
 
         # Vocabulary, label vocab, char vocab
-        words =\
-            tf.contrib.lookup.index_table_from_file(params['word_emb_vocab'],
-                                                    num_oov_buckets=1)
-        chars =\
-            tf.contrib.lookup.index_table_from_file(params['char_vocab'],
-                                                    num_oov_buckets=1)
+        words = tf.contrib.lookup.index_table_from_file(
+            params["word_emb_vocab"], num_oov_buckets=1
+        )
+        chars = tf.contrib.lookup.index_table_from_file(
+            params["char_vocab"], num_oov_buckets=1
+        )
 
         # Embed words, labels, chars with their indexes in vocabularies.
         dataset_tokens = dataset_tokens.map(
-                            lambda tokens: words.lookup(tokens),
-                            num_parallel_calls=cores)
+            lambda tokens: words.lookup(tokens), num_parallel_calls=cores
+        )
         dataset_seq_length = dataset_tokens.map(
-                            lambda tokens: tf.size(tokens),
-                            num_parallel_calls=cores)
+            lambda tokens: tf.size(tokens), num_parallel_calls=cores
+        )
         dataset_labels = dataset_labels.map(
-                            lambda tokens: words.lookup(tokens),
-                            num_parallel_calls=cores)
+            lambda tokens: words.lookup(tokens), num_parallel_calls=cores
+        )
         dataset_chars = dataset_chars.map(
-                            lambda tokens: chars.lookup(tokens),
-                            num_parallel_calls=cores)
+            lambda tokens: chars.lookup(tokens), num_parallel_calls=cores
+        )
 
         # Now needs zipping, padding, batching, shuffling
         dataset_input = tf.data.Dataset.zip((dataset_tokens, dataset_chars))
-        padded_shapes = (tf.TensorShape([None]),       # padding the words
-                         tf.TensorShape([None, None]))
-        padding_values = (words.lookup(tf.constant(['<pad_word>']))[0],
-                          chars.lookup(tf.constant(['<pad_char>']))[0])
+        padded_shapes = (
+            tf.TensorShape([None]),  # padding the words
+            tf.TensorShape([None, None]),
+        )
+        padding_values = (
+            words.lookup(tf.constant(["<pad_word>"]))[0],
+            chars.lookup(tf.constant(["<pad_char>"]))[0],
+        )
         dataset_input = dataset_input.padded_batch(
-                                batch_size,
-                                padded_shapes=padded_shapes,
-                                padding_values=padding_values)
+            batch_size,
+            padded_shapes=padded_shapes,
+            padding_values=padding_values,
+        )
 
         # padding the characters for each word
-        padded_shapes = (tf.TensorShape([None]))
+        padded_shapes = tf.TensorShape([None])
         # arrays of labels padded on the right with <pad>
 
         dataset_seq_length = dataset_seq_length.batch(batch_size)
 
-        dataset = tf.data.Dataset.zip(((dataset_input, dataset_seq_length),
-                                      dataset_labels))
+        dataset = tf.data.Dataset.zip(
+            ((dataset_input, dataset_seq_length), dataset_labels)
+        )
 
         # Shuffle the dataset and repeat:
         dataset = dataset.shuffle(buffer_size).repeat(repeat_)
@@ -233,63 +253,78 @@ if __name__ == '__main__':
 
     # Create configs
     # sess_config = tf.ConfigProto(device_count = {'GPU': 0})
-    config = tf.ConfigProto(allow_soft_placement=True,
-                            log_device_placement=True) 
+    config = tf.ConfigProto(
+        allow_soft_placement=True, log_device_placement=True
+    )
     # config.intra_op_parallelism_threads = 16
     # config.inter_op_parallelism_threads = 16
     config.gpu_options.allow_growth = True
     # distribution = tf.contrib.distribute.MirroredStrategy()
 
-    config = tf.estimator.RunConfig(save_checkpoints_steps=params['checkpoints']).replace(save_summary_steps=1).replace(session_config=config)
-
+    config = (
+        tf.estimator.RunConfig(save_checkpoints_steps=params["checkpoints"])
+        .replace(save_summary_steps=1)
+        .replace(session_config=config)
+    )
 
     # Generate estimator object
     estimator = tf.estimator.Estimator(
         model_fn=model_fn,
-        model_dir=params['log_dir'],
-        params=params, 
-        config=config)
-    hook = tf.train.ProfilerHook(save_steps=1000, output_dir=params['log_dir'])
+        model_dir=params["log_dir"],
+        params=params,
+        config=config,
+    )
+    hook = tf.train.ProfilerHook(save_steps=1000, output_dir=params["log_dir"])
 
+    if params["mode"] == "train":
+        train_spec = tf.estimator.TrainSpec(input_fn=input_fn)
+        estimator.train(input_fn, hooks=[hook])
 
-    if params['mode'] == 'train':
+    elif params["mode"] == "train_eval":
         train_spec = tf.estimator.TrainSpec(input_fn=input_fn)
-        estimator.train(input_fn,  hooks=[hook])
-    
-    elif params['mode'] == 'train_eval':
-        train_spec = tf.estimator.TrainSpec(input_fn=input_fn)
-        eval_spec = tf.estimator.EvalSpec(input_fn=input_eval,steps=700, throttle_secs=10)
+        eval_spec = tf.estimator.EvalSpec(
+            input_fn=input_eval, steps=700, throttle_secs=10
+        )
         tf.estimator.train_and_evaluate(estimator, train_spec, eval_spec)
-    
-    elif params['mode'] == 'eval':
-        eval_spec = tf.estimator.EvalSpec(input_fn=input_eval,steps=700, throttle_secs=10)
+
+    elif params["mode"] == "eval":
+        eval_spec = tf.estimator.EvalSpec(
+            input_fn=input_eval, steps=700, throttle_secs=10
+        )
         estimator.evaluate(input_eval)
-    else: 
+    else:
         # Getting sentences to print a clear, human-readable output
-        with open(glob(os.path.join(params['filepath'], '*_pred.sent'))[0], 'r', encoding='utf-8') as pred:
-            lines = list(map(lambda x: x.rstrip('\n').split(' '), pred.readlines()))
+        with open(
+            glob(os.path.join(params["filepath"], "*_pred.sent"))[0],
+            "r",
+            encoding="utf-8",
+        ) as pred:
+            lines = list(
+                map(lambda x: x.rstrip("\n").split(" "), pred.readlines())
+            )
 
         # Getting labels to do this.
-        with open(params['label_vocab'], 'r', encoding='utf-8') as lab:
-            labels = list(map(lambda x: x.rstrip('\n'), lab.readlines()))
-            dic_lab = { str(i) : labels[i] for i in range(len(labels))}
-
-        
+        with open(params["label_vocab"], "r", encoding="utf-8") as lab:
+            labels = list(map(lambda x: x.rstrip("\n"), lab.readlines()))
+            dic_lab = {str(i): labels[i] for i in range(len(labels))}
 
         for idx, predictions in enumerate(estimator.predict(input_predict)):
             # for k, l in zip(sentences_copy[idx], predictions['label'].tolist()[:len(sentences_copy[idx])]):
             # l = predictions['label'].tolist()#[:len(sentences_copy2[idx])]
             # print(idx, predictions)
-            seq = list(predictions['label'])
-            acc = ''
+            seq = list(predictions["label"])
+            acc = ""
             for i in range(len(lines[idx])):
                 try:
-                    if seq[i] == 0:  # TODO : correct it 
-                        acc = acc + lines[idx][i] + ' '
+                    if seq[i] == 0:  # TODO : correct it
+                        acc = acc + lines[idx][i] + " "
                     else:
-                        acc = acc + lines[idx][i] + ' [{}] '.format(dic_lab[str(seq[i])])
+                        acc = (
+                            acc
+                            + lines[idx][i]
+                            + " [{}] ".format(dic_lab[str(seq[i])])
+                        )
                 except:
                     pass
             print(acc)
-            print('\n')
-
+            print("\n")
