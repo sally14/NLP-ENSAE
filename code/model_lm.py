@@ -90,7 +90,7 @@ def model_fn(features, labels, mode, params):
 
     logits = tf.layers.dense(output, vocab_size)
 
-    labels = tf.one_hot(labels.map(lambda x: x[0]), depth=vocab_size)
+    labels = tf.one_hot(labels, depth=vocab_size)
 
     loss = tf.losses.softmax_cross_entropy(labels, logits)
     
