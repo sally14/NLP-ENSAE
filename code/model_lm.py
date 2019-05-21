@@ -81,7 +81,7 @@ def model_fn(features, labels, mode, params):
     # Bi-LSTM
 
     LSTM = tf.contrib.cudnn_rnn.CudnnLSTM(
-        1, hidden_size_NER, direction="bidirectional"
+        10, hidden_size_NER, direction="bidirectional"
     )
     outputs, output_states = LSTM(tf.transpose(word_embeddings, [1, 0, 2]))
     # output = outputs
@@ -92,9 +92,9 @@ def model_fn(features, labels, mode, params):
     output_bw = output_states[1][1]
     output = tf.concat([output_fw, output_bw], axis=-1)
 
-    # output = tf.layers.dense(output, vocab_size, activation=tf.nn.leaky_relu)
+    output = tf.layers.dense(output, vocab_size, activation=tf.nn.leaky_relu)
 
-    # output = tf.layers.dense(output, vocab_size, activation=tf.nn.leaky_relu)
+    output = tf.layers.dense(output, vocab_size, activation=tf.nn.leaky_relu)
 
     logits = tf.layers.dense(output, vocab_size)
 
