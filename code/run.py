@@ -258,6 +258,7 @@ if __name__ == "__main__":
             print(d)
         else:
             break
+    assert True==False
 
 
     # Create configs
