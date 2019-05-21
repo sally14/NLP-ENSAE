@@ -111,20 +111,20 @@ def model_fn(features, labels, mode, params):
         loss = tf.reduce_mean(loss)
         ppxl = tf.exp(loss)
         tf.summary.scalar(ppxl)
-        # weights = tf.sequence_mask(seq_length)
-        # # weights_flat = tf.reshape(labels, [bs[0]*m])
-        # acc = tf.metrics.accuracy(labels=labels,
-        #                           predictions=labels_pred,
-        #                           weights=weights,
-        #                           name='accuracy')
-        # prec = tf.metrics.precision(labels=labels,
-        #                             predictions=labels_pred,
-        #                             weights=weights,
-        #                             name='precision')
-        # rec = tf.metrics.recall(labels=labels,
-        #                         predictions=labels_pred,
-        #                         weights=weights,
-        #                         name='recall')
+        weights = tf.sequence_mask(seq_length)
+        # weights_flat = tf.reshape(labels, [bs[0]*m])
+        acc = tf.metrics.accuracy(labels=labels,
+                                  predictions=labels_pred,
+                                  weights=weights,
+                                  name='accuracy')
+        prec = tf.metrics.precision(labels=labels,
+                                    predictions=labels_pred,
+                                    weights=weights,
+                                    name='precision')
+        rec = tf.metrics.recall(labels=labels,
+                                predictions=labels_pred,
+                                weights=weights,
+                                name='recall')
         # # op = tf.div(2*tf.matmul(prec[1], rec[1]), tf.add(prec[1], rec[1]))
         # f1 = [0, 2*prec[0]*rec[0]/(prec[0]+rec[0])]
         # print(f1[0])
@@ -133,9 +133,9 @@ def model_fn(features, labels, mode, params):
         #            'recall' : rec,
         #            'f1' : f1}
         # For Tensorboard
-        # for k, v in metrics.items():
-        #     # v[1] is the update op of the metrics object
-        #     tf.summary.scalar(k, v[1])
+        for k, v in metrics.items():
+            # v[1] is the update op of the metrics object
+            tf.summary.scalar(k, v[1])
         if mode == tf.estimator.ModeKeys.EVAL:
             # metrics = {'accuracy': acc,
             #             'precision' : prec,
