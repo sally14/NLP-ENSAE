@@ -88,13 +88,15 @@ def model_fn(features, labels, mode, params):
     output = tf.transpose(output, perm=[1, 0, 2])
     output = tf.layers.dropout(output, rate=dropout, training=training)
 
-    pre_logits = tf.layer.flatten(output)
+    pre_logits = tf.layers.flatten(output)
 
     logits = tf.layers.dense(pre_logits, vocab_size)
 
     labels = tf.one_hot(labels, depth=vocab_size)
 
     loss = tf.losses.softmax_cross_entropy(labels, logits)
+
+    labels_pred = tf.math.argmax(logits)
     
 
     if mode == tf.estimator.ModeKeys.PREDICT:
@@ -128,10 +130,10 @@ def model_fn(features, labels, mode, params):
         # # op = tf.div(2*tf.matmul(prec[1], rec[1]), tf.add(prec[1], rec[1]))
         # f1 = [0, 2*prec[0]*rec[0]/(prec[0]+rec[0])]
         # print(f1[0])
-        # metrics = {'accuracy': acc,
-        #            'precision' : prec,
-        #            'recall' : rec,
-        #            'f1' : f1}
+        metrics = {'accuracy': acc,
+                   'precision': prec,
+                   'recall': rec}
+                   # 'f1' : f1}
         # For Tensorboard
         for k, v in metrics.items():
             # v[1] is the update op of the metrics object
