@@ -130,8 +130,7 @@ def model_fn(features, labels, mode, params):
         # # op = tf.div(2*tf.matmul(prec[1], rec[1]), tf.add(prec[1], rec[1]))
         # f1 = [0, 2*prec[0]*rec[0]/(prec[0]+rec[0])]
         # print(f1[0])
-        metrics = {'ppxl': ppxl,
-                   'accuracy': acc,
+        metrics = {'accuracy': acc,
                    'precision': prec,
                    'recall': rec}
                    # 'f1' : f1}
@@ -139,6 +138,7 @@ def model_fn(features, labels, mode, params):
         for k, v in metrics.items():
             # v[1] is the update op of the metrics object
             tf.summary.scalar(k, v[1])
+        tf.summary.scalar('ppxl', ppxl)
         if mode == tf.estimator.ModeKeys.EVAL:
             # metrics = {'accuracy': acc,
             #             'precision' : prec,
