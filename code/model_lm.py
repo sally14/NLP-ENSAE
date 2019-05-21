@@ -81,7 +81,7 @@ def model_fn(features, labels, mode, params):
     # Bi-LSTM
 
     LSTM = tf.contrib.cudnn_rnn.CudnnLSTM(
-        5
+        2
         , hidden_size_NER, direction="bidirectional"
     )
     outputs, output_states = LSTM(tf.transpose(word_embeddings, [1, 0, 2]))
