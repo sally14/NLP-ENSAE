@@ -43,6 +43,7 @@ sys.path.append(os.path.expanduser("./code"))
 import numpy as np
 from glob import glob
 import tensorflow as tf
+tf.enable_eager_execution()
 from docopt import docopt
 from unidecode import unidecode
 
@@ -248,7 +249,7 @@ if __name__ == "__main__":
         dataset = dataset.shuffle(buffer_size).repeat(repeat_)
 
         return dataset
-
+    
     dataset = input_fn()
     i=0
     for d in dataset:
