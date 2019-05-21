@@ -154,8 +154,8 @@ if __name__ == "__main__":
         buffer_size = params["buffer_size"]
 
         # Get the files list:
-        sent_files = glob(os.path.join(params["filepath"], "*.train.sent"))
-        label_files = glob(os.path.join(params["filepath"], "*.train.labels"))
+        sent_files = glob(os.path.join(params["filepath"], "*.train.txt.sents"))
+        label_files = glob(os.path.join(params["filepath"], "*.train.txt.labels"))
 
         # Tensorflow TextLineDataset reads files, file per file,
         # line per line, and outputs tensors containing the string
