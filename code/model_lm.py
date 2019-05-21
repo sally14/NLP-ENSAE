@@ -84,13 +84,15 @@ def model_fn(features, labels, mode, params):
         1, hidden_size_NER, direction="bidirectional"
     )
     outputs, output_states = LSTM(tf.transpose(word_embeddings, [1, 0, 2]))
-    output = outputs
-    output = tf.transpose(output, perm=[1, 0, 2])
-    output = tf.layers.dropout(output, rate=dropout, training=training)
+    # output = outputs
+    # output = tf.transpose(output, perm=[1, 0, 2])
+    # output = tf.layers.dropout(output, rate=dropout, training=training)
 
-    pre_logits = tf.layers.flatten(output)
+    output_fw = output_states[0][1]
+    output_bw = output_states[1][1]
+    output = tf.concat([output_fw, output_bw], axis=-1)
 
-    logits = tf.layers.dense(pre_logits, vocab_size)
+    logits = tf.layers.dense(output, vocab_size)
 
     labels = tf.one_hot(labels, depth=vocab_size)
 
