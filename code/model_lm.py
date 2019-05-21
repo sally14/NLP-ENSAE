@@ -93,9 +93,9 @@ def model_fn(features, labels, mode, params):
     output_bw = output_states[1][1]
     output = tf.concat([output_fw, output_bw], axis=-1)
 
-    output = tf.layers.dense(output, 300)
+    output = tf.layers.dense(output, 3000)
 
-    output = tf.layers.dense(output, 300)
+    output = tf.layers.dense(output, 3000)
 
     logits = tf.layers.dense(output, vocab_size)
 
@@ -103,7 +103,7 @@ def model_fn(features, labels, mode, params):
 
     loss = tf.losses.softmax_cross_entropy(labels_one_hot, logits)
 
-    labels_pred = tf.math.argmax(logits)
+    # labels_pred = tf.math.argmax(logits)
 
     if mode == tf.estimator.ModeKeys.PREDICT:
 
@@ -116,8 +116,9 @@ def model_fn(features, labels, mode, params):
         # )
         pass
     else:
-        loss = tf.reduce_mean(loss)
-        ppxl = tf.exp(loss)
+        loss_sum = tf.reduce_sum(loss)
+        loss_mean = tf.reduce_mean(loss)
+        ppxl = tf.exp(loss_mean)
         weights = tf.sequence_mask(seq_length)
         # weights_flat = tf.reshape(labels, [bs[0]*m])
         # acc = tf.metrics.accuracy(labels=labels,
@@ -168,7 +169,7 @@ def model_fn(features, labels, mode, params):
                 opt = tf.train.GradientDescentOptimizer(lr)
             elif optim == "rmsprop":
                 opt = tf.train.RMSPropOptimizer(lr)
-            train_op = opt.minimize(loss, global_step=global_step)
+            train_op = opt.minimize(loss_sum, global_step=global_step)
             return tf.estimator.EstimatorSpec(
                 mode, loss=loss, train_op=train_op
             )
