@@ -88,7 +88,9 @@ def model_fn(features, labels, mode, params):
     output = tf.transpose(output, perm=[1, 0, 2])
     output = tf.layers.dropout(output, rate=dropout, training=training)
 
-    logits = tf.layers.dense(output, vocab_size)
+    pre_logits = tf.layers.dense(output, 200)
+
+    logits = tf.layers.dense(pre_logits, vocab_size)
 
     labels = tf.one_hot(labels, depth=vocab_size)
 
