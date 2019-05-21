@@ -92,9 +92,9 @@ def model_fn(features, labels, mode, params):
     output_bw = output_states[1][1]
     output = tf.concat([output_fw, output_bw], axis=-1)
 
-    # output = tf.layers.dense(output, vocab_size)
+    output = tf.layers.dense(output, vocab_size, activation=tf.nn.relu)
 
-    # output = tf.layers.dense(output, vocab_size)
+    output = tf.layers.dense(output, vocab_size, activation=tf.nn.relu)
 
     logits = tf.layers.dense(output, vocab_size)
 
