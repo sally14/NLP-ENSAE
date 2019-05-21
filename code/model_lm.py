@@ -171,5 +171,5 @@ def model_fn(features, labels, mode, params):
                 opt = tf.train.RMSPropOptimizer(lr)
             train_op = opt.minimize(loss_sum, global_step=global_step)
             return tf.estimator.EstimatorSpec(
-                mode, loss=loss, train_op=train_op
+                mode, loss=loss_sum, train_op=train_op
             )
