@@ -250,15 +250,15 @@ if __name__ == "__main__":
 
         return dataset
     
-    dataset = input_fn()
-    i=0
-    for d in dataset:
-        i=i+1
-        if i>290 and i<310:
-            print(d)
-        else:
-            pass
-    assert True==False
+    # dataset = input_fn()
+    # i=0
+    # for d in dataset:
+    #     i=i+1
+    #     if i>290 and i<310:
+    #         print(d)
+    #     else:
+    #         pass
+    # assert True==False
 
 
     # Create configs
