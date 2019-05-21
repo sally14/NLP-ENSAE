@@ -81,7 +81,8 @@ def model_fn(features, labels, mode, params):
     # Bi-LSTM
 
     LSTM = tf.contrib.cudnn_rnn.CudnnLSTM(
-        1, hidden_size_NER, direction="bidirectional"
+        5
+        , hidden_size_NER, direction="bidirectional"
     )
     outputs, output_states = LSTM(tf.transpose(word_embeddings, [1, 0, 2]))
     # output = outputs
@@ -91,6 +92,10 @@ def model_fn(features, labels, mode, params):
     output_fw = output_states[0][1]
     output_bw = output_states[1][1]
     output = tf.concat([output_fw, output_bw], axis=-1)
+
+    output = tf.layers.dense(output, 300)
+
+    output = tf.layers.dense(output, 300)
 
     logits = tf.layers.dense(output, vocab_size)
 
@@ -115,10 +120,10 @@ def model_fn(features, labels, mode, params):
         ppxl = tf.exp(loss)
         weights = tf.sequence_mask(seq_length)
         # weights_flat = tf.reshape(labels, [bs[0]*m])
-        acc = tf.metrics.accuracy(labels=labels,
-                                  predictions=labels_pred,
-                                  weights=weights,
-                                  name='accuracy')
+        # acc = tf.metrics.accuracy(labels=labels,
+        #                           predictions=labels_pred,
+        #                           weights=weights,
+        #                           name='accuracy')
         # prec = tf.metrics.precision(labels=labels,
         #                             predictions=labels_pred,
         #                             weights=weights,
@@ -131,7 +136,7 @@ def model_fn(features, labels, mode, params):
         # f1 = [0, 2*prec[0]*rec[0]/(prec[0]+rec[0])]
         # print(f1[0])
         metrics = {
-                   'accuracy': acc,
+                #    'accuracy': acc,
                 #    'precision': prec,
                 #    'recall': rec
                    }
