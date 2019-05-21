@@ -246,7 +246,7 @@ if __name__ == "__main__":
         )
 
         # Shuffle the dataset and repeat:
-        dataset = dataset.shuffle(buffer_size).repeat(repeat_)
+        dataset = dataset.repeat(repeat_)
 
         return dataset
     
