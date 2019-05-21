@@ -158,7 +158,7 @@ def create_vocab_and_chars_txt(vocab_path):
     # Dropping the "WORD/INDEX" header
     lines = lines[1:]
     new_path_words = os.path.join(os.path.dirname(vocab_path), "vocab.txt")
-    new_path_chars = os.path.join(os.path.dirname(vocab_path), "char_vocab.txt")
+    new_path_chars = os.path.join(os.path.dirname(vocab_path), "chars_vocab.txt")
     acc_set = set([])
     with open(new_path_words, "w", encoding="utf-8") as f:
         for i in lines:
@@ -177,4 +177,4 @@ def create_lookups(
     """
     vocab = extract_vocabulary(train)
     create_google_embeddings(vocab, google_dir, dirname)
-    create_vocab_txt(os.path.join(dirname, "metadata.tsv"))
+    create_vocab_and_chars_txt(os.path.join(dirname, "metadata.tsv"))
