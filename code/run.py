@@ -249,6 +249,15 @@ if __name__ == "__main__":
 
         return dataset
 
+    dataset = input_fn()
+    i=0
+    for d in dataset:
+        if i<15:
+            print(d)
+        else:
+            break
+
+
     # Create configs
     # sess_config = tf.ConfigProto(device_count = {'GPU': 0})
     config = tf.ConfigProto(
@@ -272,11 +281,11 @@ if __name__ == "__main__":
         params=params,
         config=config,
     )
-    hook = tf.train.ProfilerHook(save_steps=1000, output_dir=params["log_dir"])
+    # hook = tf.train.ProfilerHook(save_steps=1000, output_dir=params["log_dir"])
 
     if params["mode"] == "train":
         train_spec = tf.estimator.TrainSpec(input_fn=input_fn)
-        estimator.train(input_fn, hooks=[hook])
+        estimator.train(input_fn)  #, hooks=[hook])
 
     elif params["mode"] == "train_eval":
         train_spec = tf.estimator.TrainSpec(input_fn=input_fn)
