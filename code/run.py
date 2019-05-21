@@ -105,10 +105,10 @@ if __name__ == "__main__":
         return lower
 
     def decode_tensor(tens):
-        lower = tf.py_func(
-            lambda x: x.lower(), tens, tf.string, stateful=False
+        unidecoded = tf.py_func(
+            lambda x: unidecode(x), tens, tf.string, stateful=False
         )
-        return lower
+        return unidecoded
 
     def extract_char(token, default_value="<pad_char>"):
         # Split characters
@@ -257,7 +257,7 @@ if __name__ == "__main__":
         if i>290 and i<310:
             print(d)
         else:
-            break
+            pass
     assert True==False
 
 

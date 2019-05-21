@@ -147,7 +147,7 @@ def extract_vocabulary(train):
     return vocab
 
 
-def create_vocab_txt(vocab_path):
+def create_vocab_and_chars_txt(vocab_path):
     """
     Creates vocab.txt from metadata.txt
     """
@@ -157,10 +157,16 @@ def create_vocab_txt(vocab_path):
             lines.append(line.split("\t")[0])
     # Dropping the "WORD/INDEX" header
     lines = lines[1:]
-    new_path = os.path.join(os.path.dirname(vocab_path), "vocab.txt")
-    with open(new_path, "w", encoding="utf-8") as f:
+    new_path_words = os.path.join(os.path.dirname(vocab_path), "vocab.txt")
+    new_path_chars = os.path.join(os.path.dirname(vocab_path), "char_vocab.txt")
+    acc_set = set([])
+    with open(new_path_words, "w", encoding="utf-8") as f:
         for i in lines:
             f.write(i + "\n")
+            acc_set = set(list(acc_set)+list(i))
+    with open(new_path_chars, "w", encoding="utf-8") as c:
+        for i in list(acc_set):
+            c.write(i+'\n')
 
 
 def create_lookups(
