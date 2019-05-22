@@ -219,8 +219,18 @@ if __name__ == "__main__":
             lambda tokens: chars.lookup(tokens), num_parallel_calls=cores
         )
 
-        # Now needs zipping, padding, batching, shuffling
+        # Now needs zipping,shuffling, unzipping (for padding reasons)
         dataset_input = tf.data.Dataset.zip((dataset_tokens, dataset_chars))
+        dataset = tf.data.Dataset.zip(
+            ((dataset_input, dataset_seq_length), dataset_labels)
+        ).shuffle(params['buffer_size'])
+        
+        intermediate = dataset.map(lambda a, b: a)
+        dataset_labels = dataset.map(lambda a, b: b)
+        dataset_input = intermediate.map(lambda a, b: a)
+        dataset_seq_length = intermediate.map(lambda a, b: b)
+
+
         padded_shapes = (
             tf.TensorShape([None]),  # padding the words
             tf.TensorShape([None, None]),
