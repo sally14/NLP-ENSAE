@@ -54,6 +54,7 @@ import tensorflow as tf
 from docopt import docopt
 from functools import partial
 from numpy import genfromtxt
+from glob import glob
 
 from utils import generate_dataset, create_full_vocab
 from reader import input_fn_gen
@@ -84,7 +85,8 @@ if __name__ == "__main__":
         os.makedirs(params['log_dir'])
     if not os.path.isdir(params['embedding_path']):
         os.makedirs(params['embedding_path'])
-        create_full_vocab(params['filepath'], params['embedding_path'])
+        train_path = glob(os.path.join(params['filepath'], '*train*'))[0]
+        create_full_vocab(train_path, params['embedding_path'])
 
     # Create dataset files if not already done:
     if not os.path.isdir(params['log_dir']):
