@@ -72,10 +72,10 @@ class CharacterEmbedding(tf.keras.layers.Layer):
                             forget_bias=0.0,
                             state_is_tuple=True,
                             reuse=not is_training)
-        if is_training:
-            self.RNN = tf.contrib.rnn.DropoutWrapper(
-                            self.RNN,
-                            output_keep_prob=dropout)
+        # if is_training:
+        #     self.RNN = tf.contrib.rnn.DropoutWrapper(
+        #                     self.RNN,
+        #                     output_keep_prob=dropout)
 
     def call(self, input_char):
         self.char_embedding = tf.get_variable(
@@ -127,10 +127,10 @@ class LSTMSequenceEmbedding(tf.keras.layers.Layer):
                             forget_bias=0.0,
                             state_is_tuple=True,
                             reuse=not is_training)
-        if is_training:
-            self.RNN = tf.contrib.rnn.DropoutWrapper(
-                            self.RNN,
-                            output_keep_prob=dropout)
+        # if is_training:
+        #     self.RNN = tf.contrib.rnn.DropoutWrapper(
+        #                     self.RNN,
+        #                     output_keep_prob=dropout)
 
     def call(self, input_sequence):
         outputs, output_states = self.RNN(tf.transpose(input_sequence, [1, 0, 2]))
