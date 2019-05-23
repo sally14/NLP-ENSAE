@@ -91,9 +91,10 @@ if __name__ == "__main__":
         params["embedding_path"], "vocab.txt"
     )
     params["char_vocab"] = os.path.join(
-        params["embedding_path"], "chars_vocab.txt"
+        params["embedding_path"], "chars.txt"
     )
-    if not os.path.isfile(params["word_emb_vocab"]):
+    cond = os.path.isfile(params["word_emb_vocab"]) and os.path.isfile(params["char_vocab"])
+    if not cond:
         train_path = glob(os.path.join(params['filepath'], '*train*'))[0]
         create_full_vocab(train_path, params['embedding_path'])
 
