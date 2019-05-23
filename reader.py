@@ -62,7 +62,7 @@ def input_fn_gen(mode, params, **kwargs):
             the labels ids for each words for each sentence in the batch.
     """
     # Get the important parameters to generate datasets
-    buffer_size = params["buffer_size"]
+    buffer_size = params['buffer_size']
     batch_size = params['batch_size']
 
     def input_fn():
