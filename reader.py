@@ -112,7 +112,7 @@ def input_fn_gen(mode, params, **kwargs):
         # might have reproductibility issues using tf.save because of pyfunc
         # Encoding forcing through unidecode
         decoded_tokens = sent_lines.map(
-            lambda token: decode_tensor([token]), num_parallel_calls=nb_cores
+            lambda token: decode_tensor([token]), num_parallel_calls=cores
         )
         # Lower words before indexing for tokens,
         # for compatibility with word embeddings
