@@ -116,7 +116,7 @@ if __name__ == "__main__":
                                   params['embedding_path'],
                                   'freq.txt'),
                                 delimiter="\t")
-    params['activation_finish'] = tf.nn.leaky_relu()
+    params['activation_finish'] = tf.nn.leaky_relu
     # Create input functions
     input_fn = partial(input_fn_gen, mode='train', params='params')
     input_eval = partial(input_fn_gen, mode='eval', params='params')
