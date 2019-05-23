@@ -77,7 +77,7 @@ class CharacterEmbedding(tf.keras.layers.Layer):
         #                     self.RNN,
         #                     output_keep_prob=dropout)
 
-    def call(self, input_char):
+    def call(self, input):
         self.char_embedding = tf.get_variable(
                                 name="char_embedding",
                                 dtype=tf.float32,
@@ -85,7 +85,7 @@ class CharacterEmbedding(tf.keras.layers.Layer):
                                 )
         self.char_embedded = tf.nn.embedding_lookup(
                                 self.char_embedding,
-                                input_char,
+                                input,
                                 name="char_embedded"
                                 )
         # put the time dimension on axis=1
@@ -132,8 +132,8 @@ class LSTMSequenceEmbedding(tf.keras.layers.Layer):
         #                     self.RNN,
         #                     output_keep_prob=dropout)
 
-    def call(self, input_sequence):
-        outputs, output_states = self.RNN(tf.transpose(input_sequence, [1, 0, 2]))
+    def call(self, input):
+        outputs, output_states = self.RNN(tf.transpose(input, [1, 0, 2]))
         # tf.transpose = LSTM handles differently time axis
         self.output_fw = output_states[0][1]
         self.output_bw = output_states[1][1]
