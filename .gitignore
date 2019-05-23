@@ -4,6 +4,12 @@ exp/
 tmp/
 archive/
 dataset/
+code/
+lm_dataset/
+mlm_dataset/
+logs/
+test_dataset/
+embeddings/
 
 # Config directory #
 ####################

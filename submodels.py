@@ -10,6 +10,7 @@ def point_wise_feed_forward_network(d_model, dff):
           tf.keras.layers.Dense(d_model)  # (batch_size, seq_len, d_model)
       ])
 
+
 def scaled_dot_product_attention(q, k, v, mask):
     """Calculate the attention weights.
       q, k, v must have matching leading dimensions.
@@ -218,7 +219,7 @@ class EncoderLayer(tf.keras.layers.Layer):
 class FinishDense(tf.keras.layers.Layer):
     def __init__(self,
                  deepness_finish,
-                 activation_finish=tf.nn.leaky_relu,
+                 activation_finish=tf.nn.leaky_relu(),
                  intern_size=300,
                  is_training=True,
                  dropout=0):

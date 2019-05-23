@@ -78,7 +78,7 @@ if __name__ == "__main__":
                 params[k2] = float(args[k])
             except:
                 params[k2] = args[k]
-    print(params)
+    print(type(params))
     # Checking if logdir already has the emb files:
     params['embedding_path'] = os.path.join(params['log_dir'], 'embedding')
     if not os.path.isdir(params['log_dir']):
