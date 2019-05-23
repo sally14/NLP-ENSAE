@@ -76,7 +76,7 @@ def model_fn(features, labels, mode, params):
             gpu_train=gpu_train,
             is_training=training,
             dropout=dropout)
-        chars_embedded = char_emb(input=input_char)
+        chars_embedded = char_emb(inputs=input_char)
         word_embeddings = tf.concat([word_embeddings, chars_embedded], axis=-1)
 
     word_embeddings = tf.nn.dropout(word_embeddings, dropout)
