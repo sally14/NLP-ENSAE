@@ -71,7 +71,7 @@ def model_fn(features, labels, mode, params):
     if add_chars_emb:
         char_emb = CharacterEmbedding(
             num_layers=num_layers_chars,
-            hidden_size_chars=hidden_size_chars,
+            dim_hidden_state=hidden_size_chars,
             nb_chars=nb_chars,
             gpu_train=gpu_train,
             is_training=training,
