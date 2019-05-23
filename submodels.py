@@ -219,7 +219,7 @@ class EncoderLayer(tf.keras.layers.Layer):
 class FinishDense(tf.keras.layers.Layer):
     def __init__(self,
                  deepness_finish,
-                 activation_finish=tf.nn.leaky_relu(),
+                 activation_finish=tf.nn.leaky_relu,
                  intern_size=300,
                  is_training=True,
                  dropout=0):
