@@ -97,12 +97,12 @@ class CharacterEmbedding(tf.keras.layers.Layer):
 
         outputs, output_states = self.RNN(tf.transpose(self.char_embedded, [1, 0, 2]))
         # tf.transpose = LSTM handles differently time axis
-        self.output_fw = output_states[0][1]
-        self.output_bw = output_states[1][1]
-        self.output = tf.concat([self.output_fw, self.output_bw], axis=-1)
+        output_fw = output_states[0][1]
+        output_bw = output_states[1][1]
+        output = tf.concat([output_fw, output_bw], axis=-1)
         # shape = (batch size, max sentence length, char hidden size)
-        self.output = tf.reshape(self.output, shape=[s[0], s[1], 2 * self.dim_hidden_state])
-        return self.output
+        output = tf.reshape(output, shape=[s[0], s[1], 2 * self.dim_hidden_state])
+        return output
 
 
 class LSTMSequenceEmbedding(tf.keras.layers.Layer):
