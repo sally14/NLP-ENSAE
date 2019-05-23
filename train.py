@@ -27,8 +27,8 @@ Options:
   --mode=<md>               The tensorflow mode, in ['train', 'train_eval', 'eval'] [default: train_eval]
   --embedding_size=<ems>    The word embedding dimension [default: 300]
   --char_emb_size=<em>      The chosen character embedding size [default: 100]
-  --num_LSTM_layers=<nmlstm> The number of LSTM units [default: 2]
-  --num_layers_char=<nmchar> The number of LSTM units for char embedding [default: 2]
+  --num_LSTM_layers=<nmlstm> The number of LSTM units [default:2]
+  --num_layers_char=<nmchar> The number of LSTM units for char embedding [default:2]
   --hidden_size_chars=<hsc>  The hidden size of the character embedding Bi-LSTM. [default: 25]
   --hidden_size_LSTM=<hsn>  The hidden size of the LSTM. [default: 600]
   --add_char_emb=<add>      Boolean, True if char embedding is needed [default: True]
@@ -38,7 +38,7 @@ Options:
   --batch_size=<bs>         The batch size for the training [default: 24]
   --n_epochs=<ne>           Number of epochs to train the network on [default: 100]
   --optimizer=<op>          The chosen tf optimizer, in ['sgd', 'adam', 'adagrad', 'rmsprop'] [default: sgd]
-  --checkpoints=<ckpt>      Save checkpoints every ckpt steps [default:5000]
+  --checkpoints=<ckpt>      Save checkpoints every ckpt steps [default: 5000]
   --buffer_size=<bfs>       Buffer size for shuffling  [default: 500]
   --deepness_finish=<dpsf>  The layer depth for the dense finish [default: 2]
   --activation_finish=<actf> The activation function for the dense finish [default: leaky_relu]
@@ -78,7 +78,7 @@ if __name__ == "__main__":
                 params[k2] = float(args[k])
             except:
                 params[k2] = args[k]
-    print(type(params))
+    print(params)
     # Checking if logdir already has the emb files:
     params['embedding_path'] = os.path.join(params['log_dir'], 'embedding')
     if not os.path.isdir(params['log_dir']):
