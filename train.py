@@ -85,13 +85,6 @@ if __name__ == "__main__":
         os.makedirs(params['log_dir'])
     if not os.path.isdir(params['embedding_path']):
         os.makedirs(params['embedding_path'])
-        train_path = glob(os.path.join(params['filepath'], '*train*'))[0]
-        create_full_vocab(train_path, params['embedding_path'])
-
-    # Create dataset files if not already done:
-    if not os.path.isdir(params['log_dir']):
-        params['data_path'] = os.path.join(params['log_dir'], 'dataset_lm')
-        generate_dataset(params['filepath'], params['log_dir'])
 
     # Path to vocabs for indexing
     params["word_emb_vocab"] = os.path.join(
@@ -100,6 +93,15 @@ if __name__ == "__main__":
     params["char_vocab"] = os.path.join(
         params["embedding_path"], "chars_vocab.txt"
     )
+    if not os.path.isfile(params["word_emb_vocab"]):
+        train_path = glob(os.path.join(params['filepath'], '*train*'))[0]
+        create_full_vocab(train_path, params['embedding_path'])
+
+    # Create dataset files if not already done:
+    if not os.path.isdir(params['log_dir']):
+        params['data_path'] = os.path.join(params['log_dir'], 'dataset_lm')
+        generate_dataset(params['filepath'], params['log_dir'])
+
 
     # Get nb_chars, nb_labels, & nb_words for params (used in model):
     with open(params["word_emb_vocab"], "r", encoding="utf-8") as f:
