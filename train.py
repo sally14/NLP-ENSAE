@@ -118,8 +118,8 @@ if __name__ == "__main__":
                                 delimiter="\t")
     params['activation_finish'] = tf.nn.leaky_relu
     # Create input functions
-    input_fn = partial(input_fn_gen, mode='train', params='params')
-    input_eval = partial(input_fn_gen, mode='eval', params='params')
+    input_fn = partial(input_fn_gen, mode='train', params=params)
+    input_eval = partial(input_fn_gen, mode='eval', params=params)
 
     # Session config for tensorflow
     config = tf.ConfigProto(
@@ -142,7 +142,6 @@ if __name__ == "__main__":
     )
 
     if params["mode"] == "train":
-        input_fn = partial(input_fn_gen, mode='train', params='params')
         train_spec = tf.estimator.TrainSpec(input_fn=input_fn)
         estimator.train(input_fn)
 
