@@ -1,6 +1,6 @@
-"""
+'''
 Reader functions to input data in tf.estimator
-"""
+'''
 import os
 import tensorflow as tf
 from glob import glob
@@ -20,9 +20,9 @@ def decode_tensor(tens):
     return lower
 
 
-def extract_char(token, default_value="<pad_char>"):
+def extract_char(token, default_value='<pad_char>'):
     # Split characters
-    out = tf.string_split(token, delimiter="")
+    out = tf.string_split(token, delimiter='')
     # Convert to Dense tensor, filling with default value
     out = tf.sparse_tensor_to_dense(out, default_value=default_value)
     return out
@@ -35,7 +35,7 @@ def extract_char_V2(tens):
 
 # INPUT FUNCTIONS
 def input_fn_gen(mode, params, **kwargs):
-    """
+    '''
     input_fn
         Generates a dataset to be fed to the tf.Estimator model
         As the input_fn function cannot take arguments in tf.Estimator,
@@ -60,7 +60,7 @@ def input_fn_gen(mode, params, **kwargs):
             index in the character vocabulary.
             - dataset_labels is a [batch_size, max_l] tensor containing
             the labels ids for each words for each sentence in the batch.
-    """
+    '''
     # Get the important parameters to generate datasets
     buffer_size = params['buffer_size']
     batch_size = params['batch_size']
@@ -68,8 +68,8 @@ def input_fn_gen(mode, params, **kwargs):
     def input_fn():
         # Get the files list:
         if mode == 'train':
-            sent_files = glob(os.path.join(params["filepath"], "*.train.txt.sents"))
-            label_files = glob(os.path.join(params["filepath"], "*.train.txt.labels"))
+            sent_files = glob(os.path.join(params['filepath'], '*.train.txt.sents'))
+            label_files = glob(os.path.join(params['filepath'], '*.train.txt.labels'))
             # Tensorflow TextLineDataset reads files, file per file,
             # line per line, and outputs tensors containing the string
             # for each line.
@@ -79,11 +79,11 @@ def input_fn_gen(mode, params, **kwargs):
             label_lines = tf.data.TextLineDataset(
                 label_files, buffer_size=buffer_size
             )
-            repeat_ = params["n_epochs"]
+            repeat_ = params['n_epochs']
 
         elif mode == 'eval':
-            sent_files = glob(os.path.join(params["filepath"], "*.test.txt.sents"))
-            label_files = glob(os.path.join(params["filepath"], "*.test.txt.labels"))
+            sent_files = glob(os.path.join(params['filepath'], '*.test.txt.sents'))
+            label_files = glob(os.path.join(params['filepath'], '*.test.txt.labels'))
             # Tensorflow TextLineDataset reads files, file per file,
             # line per line, and outputs tensors containing the string
             # for each line.
@@ -121,28 +121,28 @@ def input_fn_gen(mode, params, **kwargs):
         )
         # Split tokens along whitespace
         dataset_tokens = lowered_tokens.map(
-            lambda string: tf.string_split([string], delimiter=" ").values,
+            lambda string: tf.string_split([string], delimiter=' ').values,
             num_parallel_calls=cores,
         )
         # No lowering for characters to keep maximum information,
         # split a first time along whitespaces
         decoded_chars = decoded_tokens.map(
-            lambda string: tf.string_split([string], delimiter=" ").values,
+            lambda string: tf.string_split([string], delimiter=' ').values,
             num_parallel_calls=cores,
         )
 
         dataset_labels = label_lines.map(
-            lambda string: tf.string_split([string], delimiter=" ").values,
+            lambda string: tf.string_split([string], delimiter=' ').values,
             num_parallel_calls=cores,
         )
         dataset_chars = decoded_chars.apply(extract_char_V2)
 
         # Vocabulary, label vocab, char vocab
         words = tf.contrib.lookup.index_table_from_file(
-            params["word_emb_vocab"], num_oov_buckets=1
+            params['word_emb_vocab'], num_oov_buckets=1
         )
         chars = tf.contrib.lookup.index_table_from_file(
-            params["char_vocab"], num_oov_buckets=1
+            params['char_vocab'], num_oov_buckets=1
         )
 
         # Embed words, labels, chars with their indexes in vocabularies.
@@ -175,8 +175,8 @@ def input_fn_gen(mode, params, **kwargs):
             tf.TensorShape([None, None]),
         )
         padding_values = (
-            words.lookup(tf.constant(["<pad_word>"]))[0],
-            chars.lookup(tf.constant(["<pad_char>"]))[0],
+            words.lookup(tf.constant(['<pad_word>']))[0],
+            chars.lookup(tf.constant(['<pad_char>']))[0],
         )
         dataset_input = dataset_input.padded_batch(
             batch_size,
