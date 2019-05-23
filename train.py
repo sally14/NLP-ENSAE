@@ -31,7 +31,7 @@ Options:
   --num_layers_char=<nmchar> The number of LSTM units for char embedding [default: 2]
   --hidden_size_chars=<hsc>  The hidden size of the character embedding Bi-LSTM. [default: 25]
   --hidden_size_LSTM=<hsn>  The hidden size of the LSTM. [default: 600]
-  --add_char_emb=<add>      Boolean, True if char embedding is needed [default: False]
+  --add_char_emb=<add>      Boolean, True if char embedding is needed [default: True]
   --num_heads=<nmh>         The number of head for the attention encoder layer [default: 10]
   --dropout=<dp>            The dropout value. [default: 0.5]
   --learning_rate=<lr>      The learning rate for the optimizer [default: 1e-3]
