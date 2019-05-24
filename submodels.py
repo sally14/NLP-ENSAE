@@ -268,21 +268,25 @@ class LossConstructor(tf.keras.layers.Layer):
             self.inv_freq = self.inv_freq/self.count
 
     def call(self, logits, labels):
-        labels_one_hot = tf.squeeze(tf.one_hot(labels, 
-                                    depth=self.vocab_size))
+        labels_one_hot = tf.one_hot(labels,
+                                    depth=self.vocab_size)
         if self.weighted_loss:
             freq_weights = tf.nn.embedding_lookup(
                                 self.inv_freq,
                                 labels,
                                 name="freq_weights"
                                 )
-            losses = tf.losses.softmax_cross_entropy(labels_one_hot, logits)
+            self.weighted_loss = tf.losses.softmax_cross_entropy(
+                            labels_one_hot,
+                            logits,
+                            weights=freq_weights)
             print(labels_one_hot.shape)
             print(logits.shape)
             print(labels.shape)
-            print(losses.shape)
+            # print(losses.shape)
             print(freq_weights.shape)
-            self.weighted_loss = tf.losses.compute_weighted_loss(losses, freq_weights)
+            print(self.weighted_loss)
+            #self.weighted_loss = tf.losses.compute_weighted_loss(losses, freq_weights)
         else:
             self.weighted_loss = None
         loss = tf.losses.softmax_cross_entropy(labels_one_hot, logits)
