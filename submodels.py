@@ -228,6 +228,7 @@ class FinishDense(tf.keras.layers.Layer):
         self.activation_finish = activation_finish
         self.is_training = is_training
         self.dropout = dropout
+        self.intern_size = intern_size
 
     def call(self, input, vocab_size):
         nb_dense = self.deepness_finish
