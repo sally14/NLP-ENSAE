@@ -16,7 +16,6 @@ def model_fn(features, labels, mode, params):
     gpu_train = params['gpu_train']
 
     # Learning params
-    batch_size = params["batch_size"]
     dropout = params["dropout"]
     lr = params["learning_rate"]
     optim = params["optimizer"]
@@ -145,6 +144,7 @@ def model_fn(features, labels, mode, params):
             # v[1] is the update op of the metrics object
             tf.summary.scalar(k, v[1])
         tf.summary.scalar('perplexity', ppxl)
+        tf.summary.scalar('weighted_loss', weigthed)
         if mode == tf.estimator.ModeKeys.EVAL:
             return tf.estimator.EstimatorSpec(
                 mode, loss=loss_mean, eval_metric_ops=metrics
