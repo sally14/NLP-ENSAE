@@ -68,8 +68,8 @@ def input_fn_gen(mode, params, **kwargs):
     def input_fn():
         # Get the files list:
         if mode == 'train':
-            sent_files = glob(os.path.join(params['filepath'], '*.train.txt.sents'))
-            label_files = glob(os.path.join(params['filepath'], '*.train.txt.labels'))
+            sent_files = glob(os.path.join(params['data_path'], '*.train.txt.sents'))
+            label_files = glob(os.path.join(params['data_path'], '*.train.txt.labels'))
             # Tensorflow TextLineDataset reads files, file per file,
             # line per line, and outputs tensors containing the string
             # for each line.
