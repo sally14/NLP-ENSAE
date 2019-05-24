@@ -144,7 +144,8 @@ def model_fn(features, labels, mode, params):
             # v[1] is the update op of the metrics object
             tf.summary.scalar(k, v[1])
         tf.summary.scalar('perplexity', ppxl)
-        tf.summary.scalar('weighted_loss', weigthed)
+        if weighted_loss:
+            tf.summary.scalar('weighted_loss', weigthed)
         if mode == tf.estimator.ModeKeys.EVAL:
             return tf.estimator.EstimatorSpec(
                 mode, loss=loss_mean, eval_metric_ops=metrics
