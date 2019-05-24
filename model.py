@@ -110,7 +110,7 @@ def model_fn(features, labels, mode, params):
                 intern_size=inter_size,
                 is_training=training,
                 dropout=dropout)
-    logits = dense(output, vocab_size)
+    logits = dense(output, vocab_size+1)
 
     labels_pred = tf.math.argmax(logits, axis=1)
 
@@ -125,7 +125,7 @@ def model_fn(features, labels, mode, params):
         )
     else:
         loss = LossConstructor(
-                vocab_size,
+                vocab_size+1,
                 weighted_loss=weighted_loss,
                 frequencies=frequencies)
         loss_mean, weigthed = loss(logits, labels)
@@ -133,11 +133,11 @@ def model_fn(features, labels, mode, params):
         if weighted_loss:
             grads, _ = tf.clip_by_global_norm(
                         tf.gradients(weigthed, tvars),
-                        10)
+                        20)
         else:
             grads, _ = tf.clip_by_global_norm(
                         tf.gradients(loss_mean, tvars),
-                        10)
+                        20)
         ppxl = tf.exp(loss_mean)
 
         acc = tf.metrics.accuracy(labels=labels,
