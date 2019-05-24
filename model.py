@@ -80,10 +80,13 @@ def model_fn(features, labels, mode, params):
         word_embeddings = tf.concat([word_embeddings, chars_embedded], axis=-1)
 
     word_embeddings = tf.nn.dropout(word_embeddings, dropout)
-    embedding_shape = tf.shape(word_embeddings)
+    if add_chars_emb:
+        embedding_shape = embedding_size + 2*hidden_size_chars
+    else:
+        embedding_shape = embedding_size
 
     # Encoder phase :
-    sample_encoder_layer = EncoderLayer(embedding_shape[-1],
+    sample_encoder_layer = EncoderLayer(embedding_shape,
                                         num_heads, 2048)
     out_sequence = sample_encoder_layer(word_embeddings, False, None)
 
