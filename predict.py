@@ -95,10 +95,6 @@ if __name__ == "__main__":
 
     # Checking if logdir already has the emb files:
     params['embedding_path'] = os.path.join(params['log_dir'], 'embedding')
-    if not os.path.isdir(params['log_dir']):
-        os.makedirs(params['log_dir'])
-    if not os.path.isdir(params['embedding_path']):
-        os.makedirs(params['embedding_path'])
 
     # Path to vocabs for indexing
     params["word_emb_vocab"] = os.path.join(
@@ -107,19 +103,9 @@ if __name__ == "__main__":
     params["char_vocab"] = os.path.join(
         params["embedding_path"], "chars.txt"
     )
-    cond = os.path.isfile(params["word_emb_vocab"]) and os.path.isfile(params["char_vocab"])
-    if not cond:
-        train_path = glob(os.path.join(params['filepath'], '*train*'))[0]
-        create_full_vocab(train_path, params['embedding_path'])
 
     # Create dataset files if not already done:
     params['data_path'] = os.path.join(params['log_dir'], 'dataset_lm')
-    if not os.path.isdir(params['data_path']):
-        generate_dataset(
-              filedir=params['filepath'],
-              mode='lm',
-              logdir=params['data_path'])
-
 
     # Get nb_chars, nb_labels, & nb_words for params (used in model):
     with open(params["word_emb_vocab"], "r", encoding="utf-8") as f:
