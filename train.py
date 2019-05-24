@@ -21,29 +21,29 @@ Usage:
 Options:
   -h --help
   --version
-  --filepath                File directories, where the training, and eventually testing files are stored, files to predict in case mode=predict
-  --log_dir                 Logs directory, where the checkpoints will be stored
-  --gpu_train=<gpu>         Boolean, True is using a gpu. (Requires tensorflow-gpu) [default: True]
-  --mode=<md>               The tensorflow mode, in ['train', 'train_eval', 'eval'] [default: train_eval]
-  --embedding_size=<ems>    The word embedding dimension [default: 300]
-  --char_emb_size=<em>      The chosen character embedding size [default: 100]
+  --filepath                 File directories, where the training, and eventually testing files are stored, files to predict in case mode=predict
+  --log_dir                  Logs directory, where the checkpoints will be stored
+  --gpu_train=<gpu>          Boolean, True is using a gpu. (Requires tensorflow-gpu) [default: True]
+  --mode=<md>                The tensorflow mode, in ['train', 'train_eval', 'eval'] [default: train_eval]
+  --embedding_size=<ems>     The word embedding dimension [default: 300]
+  --char_emb_size=<em>       The chosen character embedding size [default: 100]
   --num_LSTM_layers=<nmlstm> The number of LSTM units [default:2]
   --num_layers_char=<nmchar> The number of LSTM units for char embedding [default:2]
   --hidden_size_chars=<hsc>  The hidden size of the character embedding Bi-LSTM. [default: 25]
-  --hidden_size_LSTM=<hsn>  The hidden size of the LSTM. [default: 600]
-  --add_char_emb=<add>      Boolean, True if char embedding is needed [default: True]
-  --num_heads=<nmh>         The number of head for the attention encoder layer [default: 10]
-  --dropout=<dp>            The dropout value. [default: 0.5]
-  --learning_rate=<lr>      The learning rate for the optimizer [default: 1e-3]
-  --batch_size=<bs>         The batch size for the training [default: 24]
-  --n_epochs=<ne>           Number of epochs to train the network on [default: 100]
-  --optimizer=<op>          The chosen tf optimizer, in ['sgd', 'adam', 'adagrad', 'rmsprop'] [default: sgd]
-  --checkpoints=<ckpt>      Save checkpoints every ckpt steps [default: 5000]
-  --buffer_size=<bfs>       Buffer size for shuffling  [default: 500]
-  --deepness_finish=<dpsf>  The layer depth for the dense finish [default: 2]
+  --hidden_size_LSTM=<hsn>   The hidden size of the LSTM. [default: 600]
+  --add_char_emb=<add>       Boolean, True if char embedding is needed [default: True]
+  --num_heads=<nmh>          The number of head for the attention encoder layer [default: 10]
+  --dropout=<dp>             The dropout value. [default: 0.5]
+  --learning_rate=<lr>       The learning rate for the optimizer [default: 1e-3]
+  --batch_size=<bs>          The batch size for the training [default: 24]
+  --n_epochs=<ne>            Number of epochs to train the network on [default: 100]
+  --optimizer=<op>           The chosen tf optimizer, in ['sgd', 'adam', 'adagrad', 'rmsprop'] [default: sgd]
+  --checkpoints=<ckpt>       Save checkpoints every ckpt steps [default: 5000]
+  --buffer_size=<bfs>        Buffer size for shuffling  [default: 500]
+  --deepness_finish=<dpsf>   The layer depth for the dense finish [default: 2]
   --activation_finish=<actf> The activation function for the dense finish [default: leaky_relu]
-  --intern_size=<intf>      The internal dimension of finish dense layers [default: 3000]
-  --weighted_loss=<wgth>    Boolean, indicates if loss must be weighted or not [default: True]
+  --intern_size=<intf>       The internal dimension of finish dense layers [default: 3000]
+  --weighted_loss=<wgth>     Boolean, indicates if loss must be weighted or not [default: True]
 """
 
 
