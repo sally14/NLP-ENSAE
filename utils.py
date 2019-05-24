@@ -17,7 +17,7 @@ from nltk import FreqDist
 # sys.path.append(os.path.expanduser('~/nlp'))
 
 
-def generate_dataset(filedir, mode="mlm", **kwargs):
+def generate_dataset(filedir, logdir, mode="mlm", **kwargs):
     """
     Generates dataset for the Masked Language / LM task.
     Args
@@ -38,7 +38,7 @@ def generate_dataset(filedir, mode="mlm", **kwargs):
     # Getting dirname for writing operations:
     dirname = os.path.dirname(os.path.dirname(filenames[0]))
     # Creating new subdir in which files will be written
-    write_path = os.path.join(dirname, mode + "_dataset")
+    write_path = logdir
 
     if not os.path.exists(write_path):
         os.makedirs(write_path)
