@@ -166,7 +166,7 @@ def input_fn_gen(mode, params, **kwargs):
         ).shuffle(buffer_size)
 
         intermediate = dataset.map(lambda a, b: a)
-        dataset_labels = dataset.map(lambda a, b: b)
+        dataset_labels = dataset.map(lambda a, b: b[0])
         dataset_input = intermediate.map(lambda a, b: a)
         dataset_seq_length = intermediate.map(lambda a, b: b)
 
@@ -183,10 +183,6 @@ def input_fn_gen(mode, params, **kwargs):
             padded_shapes=padded_shapes,
             padding_values=padding_values,
         )
-
-        # padding the characters for each word
-        padded_shapes = tf.TensorShape([None])
-        # arrays of labels padded on the right with <pad>
 
         dataset_seq_length = dataset_seq_length.batch(batch_size)
 

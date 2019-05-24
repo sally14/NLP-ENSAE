@@ -277,6 +277,11 @@ class LossConstructor(tf.keras.layers.Layer):
                                 name="freq_weights"
                                 )
             losses = tf.losses.softmax_cross_entropy(labels_one_hot, logits)
+            print(labels_one_hot.shape)
+            print(logits.shape)
+            print(labels.shape)
+            print(losses.shape)
+            print(freq_weights.shape)
             self.weighted_loss = tf.losses.compute_weighted_loss(losses, freq_weights)
         else:
             self.weighted_loss = None
