@@ -258,8 +258,8 @@ class LossConstructor(tf.keras.layers.Layer):
         self.vocab_size = vocab_size
         if self.weighted_loss:
             self.frequencies = tf.get_variable(
-                                self.frequencies,
                                 name='frequencies',
+                                initializer=tf.constant(self.frequencies),
                                 shape=[self.vocab_size, 1],
                                 dtype=tf.float32,
                                 trainable=False
