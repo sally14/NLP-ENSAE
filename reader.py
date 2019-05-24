@@ -82,8 +82,8 @@ def input_fn_gen(mode, params, **kwargs):
             repeat_ = params['n_epochs']
 
         elif mode == 'eval':
-            sent_files = glob(os.path.join(params['filepath'], '*.test.txt.sents'))
-            label_files = glob(os.path.join(params['filepath'], '*.test.txt.labels'))
+            sent_files = glob(os.path.join(params['data_path'], '*.test.txt.sents'))
+            label_files = glob(os.path.join(params['data_path'], '*.test.txt.labels'))
             # Tensorflow TextLineDataset reads files, file per file,
             # line per line, and outputs tensors containing the string
             # for each line.
