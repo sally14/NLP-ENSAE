@@ -59,7 +59,7 @@ def model_fn(features, labels, mode, params):
     # First embed words
     W2V_embedding = tf.get_variable(
                         name='W2V_embedding',
-                        shape=[vocab_size, embedding_size],
+                        shape=[vocab_size+1, embedding_size],
                         dtype=tf.float32,
                         trainable=True
                         )
@@ -74,7 +74,7 @@ def model_fn(features, labels, mode, params):
         char_emb = CharacterEmbedding(
             num_layers=num_layers_chars,
             dim_hidden_state=hidden_size_chars,
-            nb_chars=nb_chars,
+            nb_chars=nb_chars+1,
             gpu_train=gpu_train,
             is_training=training,
             dropout=dropout)
