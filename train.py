@@ -101,7 +101,7 @@ if __name__ == "__main__":
     # Create dataset files if not already done:
     if not os.path.isdir(os.path.join(params['log_dir'], 'dataset_lm')):
         params['data_path'] = os.path.join(params['log_dir'], 'dataset_lm')
-        generate_dataset(params['filepath'], params['data_path'])
+        generate_dataset(params['filepath'], 'lm', params['data_path'])
 
 
     # Get nb_chars, nb_labels, & nb_words for params (used in model):
