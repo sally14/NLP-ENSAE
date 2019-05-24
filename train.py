@@ -99,8 +99,8 @@ if __name__ == "__main__":
         create_full_vocab(train_path, params['embedding_path'])
 
     # Create dataset files if not already done:
-    if not os.path.isdir(os.path.join(params['log_dir'], 'dataset_lm')):
-        params['data_path'] = os.path.join(params['log_dir'], 'dataset_lm')
+    params['data_path'] = os.path.join(params['log_dir'], 'dataset_lm')
+    if not os.path.isdir(params['data_path']):
         generate_dataset(
               filedir=params['filepath'],
               mode='lm',
