@@ -35,6 +35,9 @@ def model_fn(features, labels, mode, params):
         hidden_size_chars = params['hidden_size_chars']
         nb_chars = params['nb_chars']
 
+    # Add encoder:
+    add_encoder = params['add_encoder']
+
     # TODO : positionnal embedding parameters
 
     # Encoder parameters
@@ -85,9 +88,12 @@ def model_fn(features, labels, mode, params):
         embedding_shape = embedding_size
 
     # Encoder phase :
-    sample_encoder_layer = EncoderLayer(embedding_shape,
-                                        num_heads, 2048)
-    out_sequence = sample_encoder_layer(word_embeddings, False, None)
+    if add_encoder:
+        sample_encoder_layer = EncoderLayer(embedding_shape,
+                                            num_heads, 2048)
+        out_sequence = sample_encoder_layer(word_embeddings, False, None)
+    else:
+        out_sequence = word_embeddings
 
     # LSTM sequence embedding
     seq_emb = LSTMSequenceEmbedding(

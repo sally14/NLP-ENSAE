@@ -17,6 +17,7 @@ Usage:
   [--buffer_size=<bfs>]
   [--deepness_finish=<dpsf>] [--activation_finish=<actf>]
   [--intern_size=<intf>] [--weighted_loss=<wgth>]
+  [--add_encoder=<addenc>]
 
 Options:
   -h --help
@@ -44,6 +45,7 @@ Options:
   --activation_finish=<actf> The activation function for the dense finish [default: leaky_relu]
   --intern_size=<intf>       The internal dimension of finish dense layers [default: 3000]
   --weighted_loss=<wgth>     Boolean, indicates if loss must be weighted or not [default: True]
+  --add_encoder=<addenc>     Boolean, indicates if encodre must be kept [default: True]
 """
 
 
