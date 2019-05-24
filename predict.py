@@ -17,6 +17,8 @@ Usage:
   [--buffer_size=<bfs>]
   [--deepness_finish=<dpsf>] [--activation_finish=<actf>]
   [--intern_size=<intf>] [--weighted_loss=<wgth>]
+[--add_encoder=<addenc>]
+
 
 Options:
   -h --help
@@ -45,6 +47,7 @@ Options:
   --activation_finish=<actf> The activation function for the dense finish [default: leaky_relu]
   --intern_size=<intf>      The internal dimension of finish dense layers [default: 3000]
   --weighted_loss=<wgth>    Boolean, indicates if loss must be weighted or not [default: True]
+  --add_encoder=<addenc>     Boolean, indicates if encodre must be kept [default: True]
 """
 
 
@@ -92,7 +95,9 @@ if __name__ == "__main__":
                 except:
                     params[k2] = args[k]
     print(params)
-
+    if params['num_LSTM_layers'] is None or params['num_layers_char'] is None:
+        params['num_LSTM_layers'] = 2
+        params['num_layers_char'] = 2
     # Checking if logdir already has the emb files:
     params['embedding_path'] = os.path.join(params['log_dir'], 'embedding')
 
