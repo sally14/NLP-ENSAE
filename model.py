@@ -81,7 +81,8 @@ def model_fn(features, labels, mode, params):
 
     word_embeddings = tf.nn.dropout(word_embeddings, dropout)
     embedding_shape = tf.shape(word_embeddings)
-
+    print(embedding_shape)
+    print(num_heads)
     # Encoder phase :
     sample_encoder_layer = EncoderLayer(embedding_shape[-1],
                                         num_heads, 2048)

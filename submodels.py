@@ -135,10 +135,10 @@ class LSTMSequenceEmbedding(tf.keras.layers.Layer):
     def call(self, inputs):
         outputs, output_states = self.RNN(tf.transpose(inputs, [1, 0, 2]))
         # tf.transpose = LSTM handles differently time axis
-        self.output_fw = output_states[0][1]
-        self.output_bw = output_states[1][1]
-        self.output = tf.concat([self.output_fw, self.output_bw], axis=-1)
-        return self.output
+        output_fw = output_states[0][1]
+        output_bw = output_states[1][1]
+        output = tf.concat([output_fw, output_bw], axis=-1)
+        return output
 
 
 class MultiHeadAttention(tf.keras.layers.Layer):
