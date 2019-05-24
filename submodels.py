@@ -261,7 +261,7 @@ class LossConstructor(tf.keras.layers.Layer):
                                 name='frequencies',
                                 initializer=tf.constant(self.frequencies),
                                 shape=[self.vocab_size, 1],
-                                dtype=tf.float32,
+                                dtype=tf.float64,
                                 trainable=False
                                 )
             self.inv_freq = 1/self.frequencies
