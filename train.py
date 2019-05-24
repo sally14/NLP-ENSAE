@@ -63,6 +63,15 @@ from model import model_fn
 logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"))
 
 
+def str_to_bool(s):
+    if s == 'True':
+        return True
+    elif s == 'False':
+        return False
+    else:
+        raise ValueError
+
+
 if __name__ == "__main__":
     # Get the arguments
     args = docopt(__doc__, version="0.3")
@@ -77,7 +86,10 @@ if __name__ == "__main__":
             try:
                 params[k2] = float(args[k])
             except:
-                params[k2] = args[k]
+                try:
+                    params[k2] = str_to_bool(args[k])
+                except:
+                    params[k2] = args[k]
     print(params)
     # Checking if logdir already has the emb files:
     params['embedding_path'] = os.path.join(params['log_dir'], 'embedding')
