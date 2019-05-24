@@ -36,7 +36,7 @@ def generate_dataset(filedir, logdir, mode="mlm", **kwargs):
     # Retrieving list of filenames with glob:
     filenames = glob(os.path.join(filedir, "*"))
     # Getting dirname for writing operations:
-    dirname = os.path.dirname(os.path.dirname(filenames[0]))
+    # dirname = os.path.dirname(os.path.dirname(filenames[0]))
     # Creating new subdir in which files will be written
     write_path = logdir
 
