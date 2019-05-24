@@ -129,15 +129,15 @@ def model_fn(features, labels, mode, params):
                 weighted_loss=weighted_loss,
                 frequencies=frequencies)
         loss_mean, weigthed = loss(logits, labels)
-        tvars = tf.trainable_variables()
-        if weighted_loss:
-            grads, _ = tf.clip_by_global_norm(
-                        tf.gradients(weigthed, tvars),
-                        20)
-        else:
-            grads, _ = tf.clip_by_global_norm(
-                        tf.gradients(loss_mean, tvars),
-                        20)
+        # tvars = tf.trainable_variables()
+        # if weighted_loss:
+        #     # grads, _ = tf.clip_by_global_norm(
+        #     #             tf.gradients(weigthed, tvars),
+        #     #             20)
+        # else:
+        #     # grads, _ = tf.clip_by_global_norm(
+        #     #             tf.gradients(loss_mean, tvars),
+        #     #             20)
         ppxl = tf.exp(loss_mean)
 
         acc = tf.metrics.accuracy(labels=labels,
@@ -167,11 +167,11 @@ def model_fn(features, labels, mode, params):
                 opt = tf.train.GradientDescentOptimizer(lr)
             elif optim == "rmsprop":
                 opt = tf.train.RMSPropOptimizer(lr)
-            
-            train_op = opt.apply_gradients(
-                        zip(grads, tvars),
-                        global_step=tf.train.get_or_create_global_step())
 
+            # train_op = opt.apply_gradients(
+            #             zip(grads, tvars),
+            #             global_step=tf.train.get_or_create_global_step())
+            train_op = opt.minimize(loss_mean, global_step=tf.train.get_or_create_global_step())
             return tf.estimator.EstimatorSpec(
                 mode, loss=loss_mean, train_op=train_op
             )
