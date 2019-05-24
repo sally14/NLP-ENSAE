@@ -6,7 +6,7 @@ Tested
 - [X] Word2Vec + Char_LSTM + Multihead Attention + LSTM + Multihead Attention + LSTM
 - [X] Word2Vec +  Multihead Attention + LSTM + Multihead Attention + LSTM
 - [X] Word2Vec + Char_LSTM + Encoder + LSTM
-- [X]
+
 
 - [X] Gradient clipping
 - [X] Xavier initializer
