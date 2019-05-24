@@ -91,6 +91,9 @@ if __name__ == "__main__":
                 except:
                     params[k2] = args[k]
     print(params)
+    if params['num_LSTM_layers'] is None or params['num_layers_char'] is None:
+        params['num_LSTM_layers'] = 2
+        params['num_layers_char'] = 2
     # Checking if logdir already has the emb files:
     params['embedding_path'] = os.path.join(params['log_dir'], 'embedding')
     if not os.path.isdir(params['log_dir']):
@@ -147,7 +150,7 @@ if __name__ == "__main__":
         .replace(save_summary_steps=1)
         .replace(session_config=config)
     )
-
+    print(params)
     # Generate estimator object
     estimator = tf.estimator.Estimator(
         model_fn=model_fn,

@@ -147,7 +147,7 @@ class MultiHeadAttention(tf.keras.layers.Layer):
         self.num_heads = num_heads
         self.d_model = d_model
 
-        assert d_model % self.num_heads == 0
+        assert d_model % self.num_heads == 0, 'd_model={0}, num_head={1}'.format(d_model, num_heads)
 
         self.depth = d_model // self.num_heads
 
