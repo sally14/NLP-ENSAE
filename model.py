@@ -22,7 +22,7 @@ def model_fn(features, labels, mode, params):
 
     # Embedding params
     vocab_size = params["vocab_size"]
-    embedding_size = params['vocab_size']
+    embedding_size = params['embedding_size']
 
     # LSTM params
     num_LSTM_layers = params["num_LSTM_layers"]
