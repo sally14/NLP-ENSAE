@@ -124,12 +124,22 @@ def model_fn(features, labels, mode, params):
             mode, predictions=predictions, export_outputs=export_outputs
         )
     else:
-        loss = LossConstructor(
-                vocab_size+1,
-                weighted_loss=weighted_loss,
-                frequencies=frequencies)
-        loss_mean, weigthed = loss(logits, labels)
-        tvars = tf.trainable_variables()
+        # loss = LossConstructor(
+        #         vocab_size+1,
+        #         weighted_loss=weighted_loss,
+        #         frequencies=frequencies)
+        # loss_mean, weigthed = loss(logits, labels)
+        # tvars = tf.trainable_variables()
+        weights = tf.get_variable('weights', shape=[vocab_size+1, hidden_size_LSTM])
+        biases = tf.get_variable('biases', shape=[vocab_size+1])
+        loss_mean = tf.reduce_mean(tf.nn.sampled_softmax_loss(
+            weights=weights,
+            biases=biases,
+            labels=labels,
+            inputs=output,
+            num_sampled=10,
+            num_classes=vocab_size+1,
+            partition_strategy="div"))
         if weighted_loss:
             grads, _ = tf.clip_by_global_norm(
                         tf.gradients(weigthed, tvars),
