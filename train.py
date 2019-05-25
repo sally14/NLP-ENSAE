@@ -47,7 +47,7 @@ Options:
   --intern_size=<intf>       The internal dimension of finish dense layers [default: 3000]
   --weighted_loss=<wgth>     Boolean, indicates if loss must be weighted or not [default: True]
   --add_encoder=<addenc>     Boolean, indicates if encodre must be kept [default: True]
-  --add_n_grams_deps=<addngrams> Boolean, indicates if encodre must be kept [default: True]
+  --add_n_grams_deps=<addngrams> Boolean, indicates if encodre must be kept [default: False]
 """
 
 

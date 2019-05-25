@@ -79,4 +79,16 @@ python train.py taoteba  logs/logs_taoteba_LSTM_chars_weighted_loss \
              --batch_size=20
 
 
+python train.py wiki  logs/logs_wiki_LSTM \
+             --optimizer=adam \
+             --learning_rate=0.001 \
+             --add_char_emb=True \
+             --weighted_loss=False \
+             --add_encoder=False \
+             --deepness_finish=0 \
+             --n_epochs=3 \
+             --batch_size=20 \
+             --add_n_grams_deps=True
+
+
 
