@@ -8,16 +8,13 @@ Utils, helps generating dataset, etc.
 
 import os
 
-# import sys
-
 import numpy as np
-# import gensim
 from glob import glob
 from nltk import FreqDist
-# sys.path.append(os.path.expanduser('~/nlp'))
+from nltk.util import ngrams
 
 
-def generate_dataset(filedir, logdir, mode="mlm", **kwargs):
+def generate_dataset(filedir, logdir, n_grams=True, mode="mlm", **kwargs):
     """
     Generates dataset for the Masked Language / LM task.
     Args
@@ -50,12 +47,11 @@ def generate_dataset(filedir, logdir, mode="mlm", **kwargs):
             sents = f.readlines()  # In f, there is 1 sent per line
             if mode == "mlm":
                 write_mlm(write_path, basename, sents, n)
+                if n_grams:
+                    write_ngrams(write_path, basename, sents, n=5)
             else:
                 write_lm(write_path, basename, sents)
     return None
-
-
-# generate_dataset('/Users/salome/Documents/ENSAE/S6/nlp/dataset', mode="mlm", n=3)
 
 
 def write_mlm(write_path, basename, sents, n):
@@ -100,6 +96,28 @@ def write_lm(write_path, basename, sents):
                     s_write.write("\n")
                     l_write.write("\n")
     return None
+
+
+def word_grams(words, min=1, max=4):
+    s = []
+    for n in range(min, max):
+        for ngram in ngrams(words, n):
+            s.append(' '.join(str(i) for i in ngram))
+    return s
+
+
+def write_ngrams(write_path, basename, sents, n=5):
+    sents = ' '.join(sents)
+    tokens = sents.split(' ')
+    n_grams = word_grams(tokens, min=n, max=n)
+    sent_basename = os.path.join(write_path, basename + ".sents")
+    label_basename = os.path.join(write_path, basename + ".labels")
+    # Now that we have sents, mask n random words / generate lm model
+    with open(sent_basename, "w", encoding="utf-8") as s_write:
+        with open(label_basename, "w", encoding="utf-8") as l_write:
+            for i in range(len(n_grams-1)):
+                s_write.write(n_grams[i])
+                l_write.write(n_grams[i+1].split(' ')[-1])
 
 
 def create_full_vocab(train, emb):

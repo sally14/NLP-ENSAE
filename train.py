@@ -18,6 +18,7 @@ Usage:
   [--deepness_finish=<dpsf>] [--activation_finish=<actf>]
   [--intern_size=<intf>] [--weighted_loss=<wgth>]
   [--add_encoder=<addenc>]
+  [--add_n_grams_deps=<addngrams>]
 
 Options:
   -h --help
@@ -46,6 +47,7 @@ Options:
   --intern_size=<intf>       The internal dimension of finish dense layers [default: 3000]
   --weighted_loss=<wgth>     Boolean, indicates if loss must be weighted or not [default: True]
   --add_encoder=<addenc>     Boolean, indicates if encodre must be kept [default: True]
+  --add_n_grams_deps=<addngrams> Boolean, indicates if encodre must be kept [default: True]
 """
 
 
@@ -121,7 +123,9 @@ if __name__ == "__main__":
         generate_dataset(
               filedir=params['filepath'],
               mode='lm',
-              logdir=params['data_path'])
+              logdir=params['data_path'],
+              n_grams=params['add_n_grams_deps']
+              )
 
 
     # Get nb_chars, nb_labels, & nb_words for params (used in model):
