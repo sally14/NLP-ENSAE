@@ -128,7 +128,9 @@ def create_full_vocab(train, emb):
         text = f.read().replace('\n', '')
     tokens = text.split(' ')
     vocab_words = FreqDist(tokens)
-    vocab_chars = set(list(text))
+    vocab_words['<s>'] = 0
+    vocab_words['</s>'] = 0
+    vocab_chars = set(list(text+'</s>'))
     count = len(tokens)
     with open(os.path.join(emb, 'vocab.txt'), 'w', encoding='utf-8') as f:
         with open(os.path.join(emb, 'freq.txt'), 'w', encoding='utf-8') as freq:
