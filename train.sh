@@ -79,7 +79,7 @@ python train.py taoteba  logs/logs_taoteba_LSTM_chars_weighted_loss \
              --batch_size=20
 
 
-python train.py wiki  logs/logs_wiki_LSTM \
+python train.py wiki  logs/logs_wiki_LSTM_ngrams \
              --optimizer=adam \
              --learning_rate=0.001 \
              --add_char_emb=True \

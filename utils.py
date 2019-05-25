@@ -14,7 +14,7 @@ from nltk import FreqDist
 from nltk.util import ngrams
 
 
-def generate_dataset(filedir, logdir, n_grams=True, mode="mlm", **kwargs):
+def generate_dataset(filedir, logdir, n_grams, mode="lm", **kwargs):
     """
     Generates dataset for the Masked Language / LM task.
     Args
@@ -47,10 +47,10 @@ def generate_dataset(filedir, logdir, n_grams=True, mode="mlm", **kwargs):
             sents = f.readlines()  # In f, there is 1 sent per line
             if mode == "mlm":
                 write_mlm(write_path, basename, sents, n)
-                if n_grams:
-                    write_ngrams(write_path, basename, sents, n=5)
             else:
                 write_lm(write_path, basename, sents)
+                if n_grams:
+                    write_ngrams(write_path, basename, sents, n=5)
     return None
 
 
@@ -95,6 +95,7 @@ def write_lm(write_path, basename, sents):
                     l_write.write(tokens[i])
                     s_write.write("\n")
                     l_write.write("\n")
+
     return None
 
 
@@ -113,8 +114,8 @@ def write_ngrams(write_path, basename, sents, n=5):
     sent_basename = os.path.join(write_path, basename + ".sents")
     label_basename = os.path.join(write_path, basename + ".labels")
     # Now that we have sents, mask n random words / generate lm model
-    with open(sent_basename, "w", encoding="utf-8") as s_write:
-        with open(label_basename, "w", encoding="utf-8") as l_write:
+    with open(sent_basename, "a", encoding="utf-8") as s_write:
+        with open(label_basename, "a", encoding="utf-8") as l_write:
             for i in range(len(n_grams-1)):
                 s_write.write(n_grams[i])
                 l_write.write(n_grams[i+1].split(' ')[-1])
