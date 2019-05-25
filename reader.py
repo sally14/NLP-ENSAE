@@ -163,7 +163,7 @@ def input_fn_gen(mode, params, **kwargs):
         dataset_input = tf.data.Dataset.zip((dataset_tokens, dataset_chars))
         dataset = tf.data.Dataset.zip(
             ((dataset_input, dataset_seq_length), dataset_labels)
-        ).shuffle(buffer_size)
+        )#.shuffle(buffer_size)
 
         intermediate = dataset.map(lambda a, b: a)
         dataset_labels = dataset.map(lambda a, b: b[0])
