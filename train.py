@@ -40,14 +40,14 @@ Options:
   --batch_size=<bs>          The batch size for the training [default: 24]
   --n_epochs=<ne>            Number of epochs to train the network on [default: 100]
   --optimizer=<op>           The chosen tf optimizer, in ['sgd', 'adam', 'adagrad', 'rmsprop'] [default: sgd]
-  --checkpoints=<ckpt>       Save checkpoints every ckpt steps [default: 20000]
+  --checkpoints=<ckpt>       Save checkpoints every ckpt steps [default: 2000]
   --buffer_size=<bfs>        Buffer size for shuffling  [default: 500]
   --deepness_finish=<dpsf>   The layer depth for the dense finish [default: 2]
   --activation_finish=<actf> The activation function for the dense finish [default: leaky_relu]
   --intern_size=<intf>       The internal dimension of finish dense layers [default: 3000]
   --weighted_loss=<wgth>     Boolean, indicates if loss must be weighted or not [default: True]
   --add_encoder=<addenc>     Boolean, indicates if encodre must be kept [default: True]
-  --add_n_grams_deps=<addngrams> Boolean, indicates if encodre must be kept [default: False]
+  --add_n_grams_deps=<addngrams> Boolean, indicates if encodre must be kept [default: True]
 """
 
 

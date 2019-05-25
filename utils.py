@@ -87,10 +87,8 @@ def write_lm(write_path, basename, sents):
         with open(label_basename, "w", encoding="utf-8") as l_write:
             for s in sents:
                 tokens = s.rstrip("\n").split(" ")
-                # Start and stop chars
-                tokens = ["<s>"] + tokens + ["</s>"]
                 m = len(tokens)
-                for i in range(1, m):
+                for i in range(1, m-):
                     s_write.write(" ".join(tokens[:i]))
                     l_write.write(tokens[i])
                     s_write.write("\n")
@@ -108,7 +106,7 @@ def word_grams(words, min=1, max=4):
 
 
 def write_ngrams(write_path, basename, sents, n=5):
-    sents = list(map(lambda x: '<s> '+x.rstrip('\n')+' </s>', sents))
+    sents = list(map(lambda x: x.rstrip('\n')+, sents))
     sents = ' '.join(sents)
     tokens = sents.split(' ')
     n_grams = word_grams(tokens, min=n, max=n+1)
@@ -128,8 +126,6 @@ def create_full_vocab(train, emb):
         text = f.read().replace('\n', '')
     tokens = text.split(' ')
     vocab_words = FreqDist(tokens)
-    vocab_words['<s>'] = 0
-    vocab_words['</s>'] = 0
     vocab_chars = set(list(text+'</s>'))
     count = len(tokens)
     with open(os.path.join(emb, 'vocab.txt'), 'w', encoding='utf-8') as f:

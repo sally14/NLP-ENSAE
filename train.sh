@@ -1,105 +1,63 @@
-python train.py taoteba  logs/logs_taoteba_LSTM_Dense \
-             --optimizer=adam \
-             --learning_rate=0.001 \
-             --add_char_emb=True \
-             --weighted_loss=False \
-             --add_encoder=False \
-             --deepness_finish=3 \
-             --n_epochs=3 \
-             --batch_size=20
-
-python train.py wiki  logs/logs_wiki_LSTM_Dense \
-             --optimizer=adam \
-             --learning_rate=0.001 \
-             --add_char_emb=True \
-             --weighted_loss=False \
-             --add_encoder=False \
-             --deepness_finish=3 \
-             --n_epochs=3 \
-             --batch_size=20
-
 python train.py taoteba  logs/logs_taoteba_LSTM \
-             --optimizer=adam \
-             --learning_rate=0.001 \
-             --add_char_emb=True \
-             --weighted_loss=False \
-             --add_encoder=False \
-             --deepness_finish=0 \
-             --n_epochs=3 \
-             --batch_size=20
-
-python train.py wiki  logs/logs_wiki_LSTM \
-             --optimizer=adam \
-             --learning_rate=0.001 \
-             --add_char_emb=True \
-             --weighted_loss=False \
-             --add_encoder=False \
-             --deepness_finish=0 \
-             --n_epochs=3 \
-             --batch_size=20
-
-python train.py taoteba  logs/logs_taoteba_Encoder \
-             --optimizer=adam \
-             --learning_rate=0.001 \
-             --add_char_emb=True \
-             --weighted_loss=False \
-             --add_encoder=True \
-             --deepness_finish=0 \
-             --n_epochs=3 \
-             --batch_size=20
-
-python train.py wiki  logs/logs_wiki_Encoder \
-             --optimizer=adam \
-             --learning_rate=0.001 \
-             --add_char_emb=True \
-             --weighted_loss=False \
-             --add_encoder=True \
-             --deepness_finish=0 \
-             --n_epochs=3 \
-             --batch_size=20
-
-python train.py wiki  logs/logs_taoteba_Encoder_no_chars \
-             --optimizer=adam \
+             --optimizer=rmsprop \
              --learning_rate=0.001 \
              --add_char_emb=False \
              --weighted_loss=False \
-             --add_encoder=True \
-             --deepness_finish=0 \
-             --n_epochs=3 \
-             --batch_size=20
+             --add_encoder=False \
+             --deepness_finish=3 \
+             --n_epochs=2 \
+             --batch_size=252
 
-python train.py taoteba  logs/logs_taoteba_LSTM_chars_weighted_loss \
-             --optimizer=adam \
+python train.py wiki  logs/logs_wiki_LSTM \
+             --optimizer=rmsprop \
              --learning_rate=0.001 \
-             --add_char_emb=True \
-             --weighted_loss=True \
-             --add_encoder=True \
-             --deepness_finish=0 \
-             --n_epochs=3 \
-             --batch_size=20
+             --add_char_emb=False \
+             --weighted_loss=False \
+             --add_encoder=False \
+             --deepness_finish=3 \
+             --n_epochs=2 \
+             --batch_size=252
 
-
-python train.py wiki  logs/logs_wiki_LSTM_ngrams \
-             --optimizer=adam \
+python train.py taoteba  logs/logs_taoteba_CharLSTM \
+             --optimizer=rmsprop \
              --learning_rate=0.001 \
              --add_char_emb=True \
              --weighted_loss=False \
              --add_encoder=False \
-             --deepness_finish=0 \
-             --n_epochs=3 \
-             --batch_size=20 \
-             --add_n_grams_deps=True
+             --deepness_finish=3 \
+             --n_epochs=2 \
+             --batch_size=252
 
-
-python predict.py logs/logs_wiki_LSTM_ngrams 'i always wanted to have a nice' 20 \
-             --optimizer=adam \
+python train.py wiki  logs/logs_wiki_CharLSTM \
+             --optimizer=rmsprop \
              --learning_rate=0.001 \
              --add_char_emb=True \
              --weighted_loss=False \
              --add_encoder=False \
-             --deepness_finish=0 \
-             --n_epochs=3 \
-             --batch_size=20 \
+             --deepness_finish=3 \
+             --n_epochs=2 \
+             --batch_size=252
+
+
+python train.py taoteba  logs/logs_taoteba_EncoderLSTM \
+             --optimizer=rmsprop \
+             --learning_rate=0.001 \
+             --add_char_emb=True \
+             --weighted_loss=False \
+             --add_encoder=True \
+             --deepness_finish=3 \
+             --n_epochs=2 \
+             --batch_size=252
+
+python train.py wiki  logs/logs_wiki_EncoderLSTM \
+             --optimizer=rmsprop \
+             --learning_rate=0.001 \
+             --add_char_emb=True \
+             --weighted_loss=False \
+             --add_encoder=True \
+             --deepness_finish=3 \
+             --n_epochs=2 \
+             --batch_size=252
 
 
 
