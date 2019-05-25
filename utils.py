@@ -88,7 +88,7 @@ def write_lm(write_path, basename, sents):
             for s in sents:
                 tokens = s.rstrip("\n").split(" ")
                 m = len(tokens)
-                for i in range(1, m-):
+                for i in range(1, m):
                     s_write.write(" ".join(tokens[:i]))
                     l_write.write(tokens[i])
                     s_write.write("\n")
