@@ -106,7 +106,7 @@ def word_grams(words, min=1, max=4):
 
 
 def write_ngrams(write_path, basename, sents, n=5):
-    sents = list(map(lambda x: x.rstrip('\n')+, sents))
+    sents = list(map(lambda x: x.rstrip('\n'), sents))
     sents = ' '.join(sents)
     tokens = sents.split(' ')
     n_grams = word_grams(tokens, min=n, max=n+1)
