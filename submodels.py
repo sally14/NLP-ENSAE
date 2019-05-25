@@ -116,7 +116,10 @@ class LSTMSequenceEmbedding(tf.keras.layers.Layer):
         self.num_layers = num_layers
         self.dim_hidden_state = dim_hidden_state
 
-        self.RNN = tf.nn.rnn_cell.LSTMCell(self.dim_hidden_state)
+        # self.RNN = tf.nn.rnn_cell.LSTMCell(self.dim_hidden_state)
+
+        cells = [tf.nn.rnn_cell.BasicLSTMCell(dim_hidden_state)]*num_layers
+        self.RNN = tf.nn.rnn_cell.MultiRNNCell(cells)
 
     def call(self, inputs, sequence_length):
         outputs, output_states = tf.nn.dynamic_rnn(
