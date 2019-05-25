@@ -135,7 +135,7 @@ def model_fn(features, labels, mode, params):
         loss_mean = tf.reduce_mean(tf.nn.sampled_softmax_loss(
             weights=weights,
             biases=biases,
-            labels=labels,
+            labels=tf.one_hot(labels),
             inputs=output,
             num_sampled=10,
             num_classes=vocab_size+1,
