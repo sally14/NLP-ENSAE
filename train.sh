@@ -5,7 +5,7 @@ python train.py taoteba  logs/logs_taoteba_LSTM_Dense \
              --weighted_loss=False \
              --add_encoder=False \
              --deepness_finish=3 \
-             --n_epochs=10 \
+             --n_epochs=3 \
              --batch_size=20
 
 python train.py wiki  logs/logs_wiki_LSTM_Dense \
@@ -15,7 +15,7 @@ python train.py wiki  logs/logs_wiki_LSTM_Dense \
              --weighted_loss=False \
              --add_encoder=False \
              --deepness_finish=3 \
-             --n_epochs=10 \
+             --n_epochs=3 \
              --batch_size=20
 
 python train.py taoteba  logs/logs_taoteba_LSTM \
@@ -25,7 +25,7 @@ python train.py taoteba  logs/logs_taoteba_LSTM \
              --weighted_loss=False \
              --add_encoder=False \
              --deepness_finish=0 \
-             --n_epochs=10 \
+             --n_epochs=3 \
              --batch_size=20
 
 python train.py wiki  logs/logs_wiki_LSTM \
@@ -35,7 +35,7 @@ python train.py wiki  logs/logs_wiki_LSTM \
              --weighted_loss=False \
              --add_encoder=False \
              --deepness_finish=0 \
-             --n_epochs=10 \
+             --n_epochs=3 \
              --batch_size=20
 
 python train.py taoteba  logs/logs_taoteba_Encoder \
@@ -45,7 +45,7 @@ python train.py taoteba  logs/logs_taoteba_Encoder \
              --weighted_loss=False \
              --add_encoder=True \
              --deepness_finish=0 \
-             --n_epochs=10 \
+             --n_epochs=3 \
              --batch_size=20
 
 python train.py wiki  logs/logs_wiki_Encoder \
@@ -55,7 +55,7 @@ python train.py wiki  logs/logs_wiki_Encoder \
              --weighted_loss=False \
              --add_encoder=True \
              --deepness_finish=0 \
-             --n_epochs=10 \
+             --n_epochs=3 \
              --batch_size=20
 
 python train.py wiki  logs/logs_taoteba_Encoder_no_chars \
@@ -65,7 +65,7 @@ python train.py wiki  logs/logs_taoteba_Encoder_no_chars \
              --weighted_loss=False \
              --add_encoder=True \
              --deepness_finish=0 \
-             --n_epochs=10 \
+             --n_epochs=3 \
              --batch_size=20
 
 python train.py taoteba  logs/logs_taoteba_LSTM_chars_weighted_loss \
@@ -75,7 +75,7 @@ python train.py taoteba  logs/logs_taoteba_LSTM_chars_weighted_loss \
              --weighted_loss=True \
              --add_encoder=True \
              --deepness_finish=0 \
-             --n_epochs=10 \
+             --n_epochs=3 \
              --batch_size=20
 
 

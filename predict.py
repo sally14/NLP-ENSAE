@@ -154,6 +154,9 @@ if __name__ == "__main__":
         lines = f.readlines()
 
     dic = {i: lines[i] for i in range(len(lines))}
+    n = len(dic)
+    dic[n] = 'pad'
+    dic[n+1] = 'pad'
 
     def predict_k(start_sent, k):
         acc_sent = start_sent
