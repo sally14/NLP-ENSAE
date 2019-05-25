@@ -102,7 +102,7 @@ def model_fn(features, labels, mode, params):
                 gpu_train=gpu_train,
                 is_training=training,
                 dropout=dropout)
-    output = seq_emb(out_sequence)
+    output = seq_emb(out_sequence, seq_length)
 
     dense = FinishDense(
                 deepness_finish=deepness_finish,

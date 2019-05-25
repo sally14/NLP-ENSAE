@@ -115,30 +115,16 @@ class LSTMSequenceEmbedding(tf.keras.layers.Layer):
         super(LSTMSequenceEmbedding, self).__init__()
         self.num_layers = num_layers
         self.dim_hidden_state = dim_hidden_state
-        if gpu_train:
-            self.RNN = tf.contrib.cudnn_rnn.CudnnLSTM(
-                            self.num_layers,
-                            self.dim_hidden_state,
-                            direction="bidirectional"
-                        )
-        else:
-            self.RNN = tf.contrib.rnn.BasicLSTMCell(
-                            self.dim_hidden_state,
-                            forget_bias=0.0,
-                            state_is_tuple=True,
-                            reuse=not is_training)
-        # if is_training:
-        #     self.RNN = tf.contrib.rnn.DropoutWrapper(
-        #                     self.RNN,
-        #                     output_keep_prob=dropout)
 
-    def call(self, inputs):
-        outputs, output_states = self.RNN(tf.transpose(inputs, [1, 0, 2]))
-        # tf.transpose = LSTM handles differently time axis
-        output_fw = output_states[0][1]
-        output_bw = output_states[1][1]
-        output = tf.concat([output_fw, output_bw], axis=-1)
-        return output
+        self.RNN = tf.nn.rnn_cell.LSTMCell(self.dim_hidden_state)
+
+    def call(self, inputs, sequence_length):
+        outputs, output_states = tf.nn.dynamic_rnn(
+                                   cell=self.RNN,
+                                   inputs=inputs,
+                                   sequence_length=sequence_length,
+                                   dtype=tf.float32)
+        return output_states[1]
 
 
 class MultiHeadAttention(tf.keras.layers.Layer):
