@@ -130,7 +130,7 @@ def model_fn(features, labels, mode, params):
         #         weighted_loss=weighted_loss,
         #         frequencies=frequencies)
         # loss_mean, weigthed = loss(logits, labels)
-        # tvars = tf.trainable_variables()
+        tvars = tf.trainable_variables()
         weights = tf.get_variable('weights', shape=[vocab_size+1, hidden_size_LSTM])
         biases = tf.get_variable('biases', shape=[vocab_size+1])
         loss_mean = tf.reduce_mean(tf.nn.sampled_softmax_loss(
