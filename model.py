@@ -19,6 +19,7 @@ def model_fn(features, labels, mode, params):
     dropout = params["dropout"]
     lr = params["learning_rate"]
     optim = params["optimizer"]
+    batch_size = params['batch_size']
 
     # Embedding params
     vocab_size = params["vocab_size"]
@@ -135,7 +136,7 @@ def model_fn(features, labels, mode, params):
         loss_mean = tf.reduce_mean(tf.nn.sampled_softmax_loss(
             weights=weights,
             biases=biases,
-            labels=tf.map_fn(lambda x: [x], labels),
+            labels=tf.reshape(labels, [batch_size, -1]),
             inputs=output,
             num_sampled=10,
             num_classes=vocab_size+1,
