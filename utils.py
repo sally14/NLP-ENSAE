@@ -110,12 +110,13 @@ def word_grams(words, min=1, max=4):
 def write_ngrams(write_path, basename, sents, n=5):
     sents = ' '.join(sents)
     tokens = sents.split(' ')
-    n_grams = word_grams(tokens, min=n, max=n)
+    n_grams = word_grams(tokens, min=n, max=n+1)
+    assert len(n_grams) > 0, 'No ngrams generated'
     sent_basename = os.path.join(write_path, basename + ".sents")
     label_basename = os.path.join(write_path, basename + ".labels")
     # Now that we have sents, mask n random words / generate lm model
-    with open(sent_basename, "a", encoding="utf-8") as s_write:
-        with open(label_basename, "a", encoding="utf-8") as l_write:
+    with open(sent_basename, "a+", encoding="utf-8") as s_write:
+        with open(label_basename, "a+", encoding="utf-8") as l_write:
             for i in range(len(n_grams)-1):
                 s_write.write(n_grams[i])
                 l_write.write(n_grams[i+1].split(' ')[-1])
