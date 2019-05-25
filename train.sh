@@ -6,7 +6,9 @@ python train.py taoteba  logs/logs_taoteba_LSTM \
              --add_encoder=False \
              --deepness_finish=3 \
              --n_epochs=2 \
-             --batch_size=252
+             --batch_size=252 \
+             --add_n_grams_deps=True \
+             --checkpoints=2000 
 
 python train.py wiki  logs/logs_wiki_LSTM \
              --optimizer=rmsprop \
@@ -16,7 +18,9 @@ python train.py wiki  logs/logs_wiki_LSTM \
              --add_encoder=False \
              --deepness_finish=3 \
              --n_epochs=2 \
-             --batch_size=252
+             --batch_size=252 \
+             --add_n_grams_deps=True \
+             --checkpoints=2000 
 
 python train.py taoteba  logs/logs_taoteba_CharLSTM \
              --optimizer=rmsprop \
@@ -26,7 +30,9 @@ python train.py taoteba  logs/logs_taoteba_CharLSTM \
              --add_encoder=False \
              --deepness_finish=3 \
              --n_epochs=2 \
-             --batch_size=252
+             --batch_size=252 \
+             --add_n_grams_deps=True \
+             --checkpoints=2000 
 
 python train.py wiki  logs/logs_wiki_CharLSTM \
              --optimizer=rmsprop \
@@ -36,7 +42,9 @@ python train.py wiki  logs/logs_wiki_CharLSTM \
              --add_encoder=False \
              --deepness_finish=3 \
              --n_epochs=2 \
-             --batch_size=252
+             --batch_size=252 \
+             --add_n_grams_deps=True \
+             --checkpoints=2000 
 
 
 python train.py taoteba  logs/logs_taoteba_EncoderLSTM \
@@ -47,7 +55,9 @@ python train.py taoteba  logs/logs_taoteba_EncoderLSTM \
              --add_encoder=True \
              --deepness_finish=3 \
              --n_epochs=2 \
-             --batch_size=252
+             --batch_size=252 \
+             --add_n_grams_deps=True \
+             --checkpoints=2000 
 
 python train.py wiki  logs/logs_wiki_EncoderLSTM \
              --optimizer=rmsprop \
@@ -57,7 +67,9 @@ python train.py wiki  logs/logs_wiki_EncoderLSTM \
              --add_encoder=True \
              --deepness_finish=3 \
              --n_epochs=2 \
-             --batch_size=252
+             --batch_size=252 \
+             --add_n_grams_deps=True \
+             --checkpoints=2000 
 
 
 
