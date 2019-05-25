@@ -251,7 +251,7 @@ class LossConstructor(tf.keras.layers.Layer):
                                 )
             self.inv_freq = 1/self.frequencies
             self.count = tf.reduce_sum(self.inv_freq)
-            self.inv_freq = self.inv_freq/self.count
+            self.inv_freq = (10**5)*self.inv_freq/self.count
 
     def call(self, logits, labels):
         labels_one_hot = tf.one_hot(labels,
