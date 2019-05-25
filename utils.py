@@ -116,7 +116,7 @@ def write_ngrams(write_path, basename, sents, n=5):
     # Now that we have sents, mask n random words / generate lm model
     with open(sent_basename, "a", encoding="utf-8") as s_write:
         with open(label_basename, "a", encoding="utf-8") as l_write:
-            for i in range(len(n_grams-1)):
+            for i in range(len(n_grams)-1):
                 s_write.write(n_grams[i])
                 l_write.write(n_grams[i+1].split(' ')[-1])
 
