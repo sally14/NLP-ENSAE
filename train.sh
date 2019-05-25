@@ -50,12 +50,13 @@ python train.py taoteba  logs/logs_taoteba_LSTM_chars_weighted_loss \
 
 
 
-python train.py taoteba  logs/logs_taoteba_LSTM_rms_prop \
+python train.py taoteba  logs/logs_taoteba_LSTM_test_num_layers \
              --optimizer=rmsprop \
              --learning_rate=0.001 \
-             --add_char_emb=True \
+             --add_char_emb=False \
              --weighted_loss=False \
              --add_encoder=False \
              --deepness_finish=2 \
-             --n_epochs=10 \
-             --batch_size=256
+             --n_epochs=1 \
+             --batch_size=256 \
+             --num_LSTM_layers=15
