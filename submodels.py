@@ -127,7 +127,7 @@ class LSTMSequenceEmbedding(tf.keras.layers.Layer):
                                    inputs=inputs,
                                    sequence_length=sequence_length,
                                    dtype=tf.float32)
-        return output_states[1]
+        return output_states[-1]
 
 
 class MultiHeadAttention(tf.keras.layers.Layer):
