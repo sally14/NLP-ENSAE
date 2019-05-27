@@ -12,6 +12,7 @@ dependencies:
   - cudatoolkit=10.0.130=0
   - cudnn=7.3.1=cuda10.0_0
   - cupti=10.0.130=0
+  - docopt=0.6.2=py37_0
   - gast=0.2.2=py37_0
   - grpcio=1.16.1=py37hf8bcb03_1
   - h5py=2.9.0=py37h7918eee_0
